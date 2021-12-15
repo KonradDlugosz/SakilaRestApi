@@ -1,5 +1,7 @@
 package com.sparta.hibernatedemo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -8,7 +10,7 @@ import java.time.Instant;
         @Index(name = "idx_unique_manager", columnList = "manager_staff_id", unique = true),
         @Index(name = "idx_fk_address_id", columnList = "address_id")
 })
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Store {
 
     @Id

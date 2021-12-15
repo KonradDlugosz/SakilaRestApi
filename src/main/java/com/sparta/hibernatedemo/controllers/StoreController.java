@@ -1,5 +1,6 @@
 package com.sparta.hibernatedemo.controllers;
 
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.sparta.hibernatedemo.entities.Store;
 import com.sparta.hibernatedemo.repositories.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,15 @@ public class StoreController {
 
     @Autowired
     private StoreRepository repository;
-
+    
     @GetMapping(value = "/sakila/stores")
     public List<Store> getAllStores(){
         return repository.findAll();
     }
 
-    @GetMapping(value = "sakila/store")
-    public ResponseEntity<Store> getStoreByID(@RequestParam int id){
-        if (repository.existsById(id)) return new ResponseEntity<>(repository.getById(id), HttpStatus.OK);
+    @GetMapping(value = "sakila/store/{id}")
+    public ResponseEntity<Store> getStoreByID(@PathVariable int id){
+        if (repository.existsById(id)) {return new ResponseEntity<>(repository.getById(id), HttpStatus.OK);}
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
