@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 public class ActorController {
-    //added
+
     @Autowired
     private ActorRepository actorRepository;
 
