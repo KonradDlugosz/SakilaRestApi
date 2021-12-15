@@ -29,19 +29,14 @@ public class FilmController {
 
     @Autowired
     private FilmRepository filmRepository;
-
-
-    @GetMapping(value = "/sakila/films")
-    public List<Film> getFilms(){
-        return filmRepository.findAll();
-    }
-
     private FilmTextRepository filmTextRepository;
+
 
     @GetMapping(value = "/sakila/films")
     public List<Film> getFilms() {
         return filmRepository.findAll();
     }
+
 
     @GetMapping(value = "/sakila/films/{id}")
     public ResponseEntity<?> getFilmById(@PathVariable Integer id) {
@@ -52,7 +47,7 @@ public class FilmController {
             return ResponseEntity.ok(film.get());
     }
 
-    @PutMapping(value = "/sakila/films/update")
+    @PutMapping(value = "/sakila/films/update/{id}")
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
         Optional<Film> results = filmRepository.findById(film.getId());
         if (results.isPresent()) {
@@ -73,10 +68,10 @@ public class FilmController {
             return null;
     }
 
-    @DeleteMapping(value = "sakila/films/{id}")
-    public Map<String, Boolean> deleteFilm(@PathVariable Integer id){
+    @DeleteMapping(value = "/sakila/films/delete/{id}")
+    public Map<String, Boolean> deleteFilm(@PathVariable Integer id) {
         Optional<Film> film = filmRepository.findById(id);
-        if(film.isPresent())
+        if (film.isPresent())
             filmRepository.delete(film.get());
         else
             return null;
@@ -85,10 +80,6 @@ public class FilmController {
         response.put("Deleted", Boolean.TRUE);
         return response;
     }
-
-
-
-
 
 
     @GetMapping(value = "sakila/film_text/{filmId}")
@@ -104,10 +95,9 @@ public class FilmController {
 
 
     @PutMapping(value = "/sakila/fim_text/add")
-    public ResponseEntity<?> addFilm(){
+    public ResponseEntity<?> addFilm() {
         return null;
     }
-
 
 
 }
