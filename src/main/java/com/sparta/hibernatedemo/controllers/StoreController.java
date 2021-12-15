@@ -4,6 +4,7 @@ import com.sparta.hibernatedemo.entities.Store;
 import com.sparta.hibernatedemo.repositories.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +21,10 @@ public class StoreController {
         return repository.findAll();
     }
 
-    @GetMapping(value = "sakila/store/{id}")
-    public Optional<Store> getStoreByID(@PathVariable int id){
-        return repository.findById(id);
+    @GetMapping(value = "sakila/store")
+    public ResponseEntity<Store> getStoreByID(@RequestParam int id){
+        if (repository.existsById(id)) return new ResponseEntity<>(repository.getById(id), HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(value = "sakila/store/update")

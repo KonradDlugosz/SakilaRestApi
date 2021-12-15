@@ -8,7 +8,9 @@ import java.time.Instant;
         @Index(name = "idx_unique_manager", columnList = "manager_staff_id", unique = true),
         @Index(name = "idx_fk_address_id", columnList = "address_id")
 })
+
 public class Store {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id", nullable = false)
