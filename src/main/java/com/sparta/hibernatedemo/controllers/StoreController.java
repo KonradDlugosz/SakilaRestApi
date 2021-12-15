@@ -1,6 +1,5 @@
 package com.sparta.hibernatedemo.controllers;
 
-import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.sparta.hibernatedemo.entities.Store;
 import com.sparta.hibernatedemo.repositories.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +28,20 @@ public class StoreController {
     }
 
     @PutMapping(value = "sakila/store/update")
-    public Store updateStore(@RequestBody Store newState){
-        Optional<Store> oldState = repository.findById(newState.getId());
-        if (oldState.isPresent()){
+    public ResponseEntity<Store> updateStore(@RequestBody Store newState){
+        if (repository.existsById(newState.getId())){
             repository.save(newState);
+            return new ResponseEntity<>(newState, HttpStatus.ACCEPTED);
         }
-        return newState;
+        else return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping(value = "sakila/store/delete")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteStore(@RequestParam int id){
-        repository.deleteById(id);
+    @DeleteMapping(value = "sakila/store/{id_to_delete}")
+    public ResponseEntity<String> deleteStore(@PathVariable int id_to_delete){
+        if (repository.existsById(id_to_delete)){
+            repository.deleteById(id_to_delete);
+            return new ResponseEntity<>("Delete Successful", HttpStatus.OK);
+        } else return new ResponseEntity<>("Store specified not found", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/sakila/store/create")
