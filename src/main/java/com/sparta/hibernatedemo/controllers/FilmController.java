@@ -1,5 +1,6 @@
 package com.sparta.hibernatedemo.controllers;
 
+import com.sparta.hibernatedemo.entities.Actor;
 import com.sparta.hibernatedemo.entities.Film;
 import com.sparta.hibernatedemo.entities.FilmText;
 import com.sparta.hibernatedemo.repositories.FilmRepository;
@@ -20,6 +21,7 @@ public class FilmController {
 
     @Autowired
     private FilmRepository filmRepository;
+    @Autowired
     private FilmTextRepository filmTextRepository;
 
     @GetMapping(value = "/sakila/films")
@@ -57,19 +59,17 @@ public class FilmController {
             return null;
     }
 
-    @DeleteMapping(value = "sakila/films/{id}")
+    @DeleteMapping(value = "sakila/films/delete/{id}")
     public Map<String, Boolean> deleteFilm(@PathVariable Integer id){
         Optional<Film> film = filmRepository.findById(id);
         if(film.isPresent())
             filmRepository.delete(film.get());
         else
             return null;
-
         Map<String, Boolean> response = new HashMap<>();
         response.put("Deleted", Boolean.TRUE);
         return response;
     }
-
 
 
 
@@ -87,11 +87,19 @@ public class FilmController {
     }
 
 
-    @PutMapping(value = "/sakila/fim_text/add")
-    public ResponseEntity<?> addFilm(){
-        return null;
+
+    @PostMapping(value = "/sakila/film_text/add")
+    public ResponseEntity<?> addFilm(@RequestBody FilmText filmText){
+        Optional<FilmText> filmExist = filmTextRepository.findById(filmText.getId());
+        if (filmExist.isPresent()){
+            return ResponseEntity.status(HttpStatus.IM_USED).body("Already Exist \n");
+        }
+        FilmText fT = new FilmText();
+        fT.setId(filmText.getId());
+        fT.setTitle(filmText.getTitle());
+        fT.setDescription(filmText.getDescription());
+        filmTextRepository.save(fT);
+        return ResponseEntity.of(Optional.of(fT));
     }
-
-
 }
 
