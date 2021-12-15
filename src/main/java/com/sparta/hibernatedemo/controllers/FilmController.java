@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class FilmController {
@@ -87,7 +84,6 @@ public class FilmController {
     }
 
 
-
     @PostMapping(value = "/sakila/film_text/add")
     public ResponseEntity<?> addFilm(@RequestBody FilmText filmText){
         Optional<FilmText> filmExist = filmTextRepository.findById(filmText.getId());
@@ -100,6 +96,32 @@ public class FilmController {
         fT.setDescription(filmText.getDescription());
         filmTextRepository.save(fT);
         return ResponseEntity.of(Optional.of(fT));
+    }
+
+    @PatchMapping(value = "/sakila/film_text/update")
+    public ResponseEntity<?> updateFilmText(@RequestBody FilmText film){
+        Optional<FilmText> filmExist  = filmTextRepository.findById(film.getId());
+        if (filmExist.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
+        }
+        filmExist.get().setDescription(film.getDescription());
+        filmExist.get().setTitle(film.getTitle());
+        final FilmText fT = filmTextRepository.save(filmExist.get());
+        return ResponseEntity.ok(fT);
+    }
+
+
+    @DeleteMapping(value = "/sakila/film_text/delete/{id}")
+    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id){
+        Optional<FilmText> filmText = filmTextRepository.findById(id);
+        if ( filmText.isPresent()){
+            filmTextRepository.delete(filmTextRepository.getById(id));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
     }
 }
 
