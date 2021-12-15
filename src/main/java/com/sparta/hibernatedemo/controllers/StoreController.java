@@ -9,13 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class StoreController {
 
     @Autowired
     private StoreRepository storeRepository;
+    @Autowired
     private StaffRepository staffRepository;
     
     @GetMapping(value = "/sakila/stores")
@@ -25,7 +28,15 @@ public class StoreController {
 
     @GetMapping(value = "sakila/store/getbyid/{id}")
     public ResponseEntity<?> getStoreByID(@PathVariable int id){
-        if (storeRepository.existsById(id)) {return new ResponseEntity<>(storeRepository.getById(id), HttpStatus.OK);}
+        if (storeRepository.existsById(id)) {
+            Store store = storeRepository.getById(id);
+            Map<String, Object> responseJSON = new HashMap<>();
+            responseJSON.put("lastUpdate", store.getLastUpdate());
+            responseJSON.put("address", store.getAddress());
+            responseJSON.put("managerInfo", Map.of("firstName", store.getManagerStaff().getFirstName(), "lastName", store.getManagerStaff().getLastName()));
+            responseJSON.put("id", store.getId());
+            return new ResponseEntity<>(responseJSON, HttpStatus.OK);
+        }
         else return new ResponseEntity<>("Store with ID: " + id + " was not found", HttpStatus.NOT_FOUND);
     }
 
@@ -55,8 +66,9 @@ public class StoreController {
     public ResponseEntity<?> getStoreAndStaff(@PathVariable int id_of_store){
         if (storeRepository.existsById(id_of_store)) {
             Store store = storeRepository.getById(id_of_store);
-            List<Staff> allStaff = staffRepository.findAllById(id_of_store);
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<Staff> allStaff = staffRepository.store_id(id_of_store);
+            List<?> responseBody = List.of(store, allStaff);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
         else return new ResponseEntity<>("Store with ID: " + id_of_store + " was not found", HttpStatus.NOT_FOUND);
     }
