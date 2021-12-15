@@ -24,3 +24,4 @@ hs_err_pid*
 /.idea/
 /.jpb/
 src/main/resources/application.properties
+application.properties
