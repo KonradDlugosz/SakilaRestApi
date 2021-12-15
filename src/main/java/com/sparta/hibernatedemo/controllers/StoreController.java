@@ -2,6 +2,7 @@ package com.sparta.hibernatedemo.controllers;
 
 import com.sparta.hibernatedemo.entities.Staff;
 import com.sparta.hibernatedemo.entities.Store;
+import com.sparta.hibernatedemo.repositories.StaffRepository;
 import com.sparta.hibernatedemo.repositories.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ public class StoreController {
 
     @Autowired
     private StoreRepository storeRepository;
-    // private StaffRepository staffRepository;
+    private StaffRepository staffRepository;
     
     @GetMapping(value = "/sakila/stores")
     public List<Store> getAllStores(){
@@ -54,7 +55,7 @@ public class StoreController {
     public ResponseEntity<?> getStoreAndStaff(@PathVariable int id_of_store){
         if (storeRepository.existsById(id_of_store)) {
             Store store = storeRepository.getById(id_of_store);
-            // List<Staff> allStaff = staffRepository.findAllByID(id_of_store);
+            List<Staff> allStaff = staffRepository.findAllById(id_of_store);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else return new ResponseEntity<>("Store with ID: " + id_of_store + " was not found", HttpStatus.NOT_FOUND);
