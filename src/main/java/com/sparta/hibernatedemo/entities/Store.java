@@ -60,4 +60,12 @@ public class Store {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Store(Integer id) {
+        this.id = id;
+    }
+
+    public Store() {
+
+    }
 }
