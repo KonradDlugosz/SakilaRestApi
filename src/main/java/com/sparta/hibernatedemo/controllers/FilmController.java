@@ -1,6 +1,5 @@
 package com.sparta.hibernatedemo.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.hibernatedemo.entities.*;
 import com.sparta.hibernatedemo.repositories.*;
@@ -80,9 +79,7 @@ public class FilmController {
         List<FilmCategory> filmCategories = filmCategoryRepository.findAll().stream().filter( s -> s.getId().getFilmId() == id).toList();
         filmCategoryRepository.deleteAllInBatch(filmCategories);
 
-
         List<Inventory> inventories = inventoryRepository.findAll().stream().filter( s -> s.getFilm().getId() == id).toList();
-
 
         List<Rental> rentals = rentalRepository.findAll().stream().filter(s -> s.getInventory().getFilm().getId() == id).toList();
         rentalRepository.deleteAllInBatch(rentals);
@@ -91,6 +88,7 @@ public class FilmController {
         Optional<Film> result = filmRepository.findById(id);
 
         HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
 
         if (result.isPresent()){
             filmRepository.deleteById(id);
