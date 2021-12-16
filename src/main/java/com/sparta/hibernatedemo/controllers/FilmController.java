@@ -1,10 +1,7 @@
 package com.sparta.hibernatedemo.controllers;
 
-import com.sparta.hibernatedemo.entities.Actor;
-import com.sparta.hibernatedemo.entities.Film;
-import com.sparta.hibernatedemo.entities.FilmText;
-import com.sparta.hibernatedemo.repositories.FilmRepository;
-import com.sparta.hibernatedemo.repositories.FilmTextRepository;
+import com.sparta.hibernatedemo.entities.*;
+import com.sparta.hibernatedemo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +17,21 @@ public class FilmController {
     private FilmRepository filmRepository;
     @Autowired
     private FilmTextRepository filmTextRepository;
+
+    @Autowired
+    private FilmActorRepository filmActorRepository;
+
+    @Autowired
+    private FilmCategoryRepository filmCategoryRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private RentalRepository rentalRepository;
+
+
+    @Autowired
 
     @GetMapping(value = "/sakila/films")
     public List<Film> getFilms() {
@@ -58,9 +70,25 @@ public class FilmController {
 
     @DeleteMapping(value = "sakila/films/delete/{id}")
     public Map<String, Boolean> deleteFilm(@PathVariable Integer id){
-        Optional<Film> film = filmRepository.findById(id);
-        if(film.isPresent())
-            filmRepository.delete(film.get());
+
+        List<FilmActor> filmActors = filmActorRepository.findAll().stream().filter( s -> s.getId().getFilmId() == 1).toList();
+        filmActorRepository.deleteAllInBatch(filmActors);
+
+        List<FilmCategory> filmCategories = filmCategoryRepository.findAll().stream().filter( s -> s.getId().getFilmId() == 1).toList();
+        filmCategoryRepository.deleteAllInBatch(filmCategories);
+
+
+        List<Inventory> inventories = inventoryRepository.findAll().stream().filter( s -> s.getFilm().getId() == 1).toList();
+
+
+        List<Rental> rentals = rentalRepository.findAll().stream().filter(s -> s.getInventory().getFilm().getId() == 1).toList();
+        rentalRepository.deleteAllInBatch(rentals);
+
+        inventoryRepository.deleteAllInBatch(inventories);
+        if (filmRepository.existsById(id)){
+            Film film = filmRepository.getById(id);
+            filmRepository.deleteById(id);
+        }
         else
             return null;
         Map<String, Boolean> response = new HashMap<>();

@@ -1,6 +1,8 @@
 package com.sparta.hibernatedemo.entities;
 
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,8 +13,10 @@ import java.util.Objects;
 @Embeddable
 public class FilmActorId implements Serializable {
     private static final long serialVersionUID = 1142456002891752583L;
+    @Cascade(CascadeType.ALL)
     @Column(name = "actor_id", nullable = false)
     private Integer actorId;
+    @Cascade(CascadeType.ALL)
     @Column(name = "film_id", nullable = false)
     private Integer filmId;
 
