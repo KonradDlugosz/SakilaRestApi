@@ -86,7 +86,6 @@ public class FilmController {
 
         inventoryRepository.deleteAllInBatch(inventories);
         if (filmRepository.existsById(id)){
-            Film film = filmRepository.getById(id);
             filmRepository.deleteById(id);
         }
         else
