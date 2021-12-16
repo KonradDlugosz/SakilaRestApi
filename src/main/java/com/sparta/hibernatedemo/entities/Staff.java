@@ -1,5 +1,8 @@
 package com.sparta.hibernatedemo.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -45,7 +48,6 @@ public class Staff {
 
     @Column(name = "last_update", nullable = false)
     private Instant lastUpdate;
-
 
     public String getFirstName() {
         return firstName;
@@ -133,5 +135,13 @@ public class Staff {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Staff(Integer id) {
+        this.id = id;
+    }
+
+    public Staff() {
+
     }
 }

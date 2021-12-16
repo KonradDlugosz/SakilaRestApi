@@ -27,6 +27,8 @@ public class StaffController {
 
     @GetMapping(value = "/staff/one")
     public ResponseEntity<?> getStaffById(@RequestParam Integer id){
+
+
         Optional<Staff> staff = staffRepository.findById(id);
         if(staff.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Staff not found!");
