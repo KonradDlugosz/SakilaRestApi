@@ -2,7 +2,9 @@ package com.sparta.hibernatedemo.controllers;
 
 
 import com.sparta.hibernatedemo.entities.Staff;
+import com.sparta.hibernatedemo.entities.Store;
 import com.sparta.hibernatedemo.repositories.StaffRepository;
+import com.sparta.hibernatedemo.repositories.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ public class StaffController {
 
     @Autowired
     private StaffRepository staffRepository;
+    @Autowired
+    private StoreRepository storeRepository;
 
     @GetMapping(value = "/staff/all")
     public List<Staff> getAllStaff(){
@@ -40,6 +44,15 @@ public class StaffController {
     public Map<String, Boolean> removeStaff(@RequestParam Integer id){
         Optional<Staff> staff = staffRepository.findById(id);
         Map<String,Boolean> response = new HashMap<>();
+
+        List<Store> storeList = storeRepository.findAll();
+        for(Store store: storeList){
+            if(store.getManagerStaff().getId() == id){
+//                storeRepository.deleteById(store.getId());
+                Optional<Store> storeToUpdate = storeRepository.findById(store.getId());
+                storeToUpdate.get().setManagerStaff(null);
+            }
+        }
 
         if(staff.isPresent()){
             staffRepository.deleteById(staff.get().getId());
