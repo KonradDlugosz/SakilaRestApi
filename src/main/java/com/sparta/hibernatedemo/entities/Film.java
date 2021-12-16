@@ -1,14 +1,18 @@
 package com.sparta.hibernatedemo.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
 @Table(name = "film")
+
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @Column(name = "film_id", nullable = false)
     private Integer id;
 

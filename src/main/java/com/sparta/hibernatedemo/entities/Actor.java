@@ -1,5 +1,7 @@
 package com.sparta.hibernatedemo.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.time.Instant;
 

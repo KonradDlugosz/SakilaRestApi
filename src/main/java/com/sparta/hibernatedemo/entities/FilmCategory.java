@@ -1,19 +1,16 @@
 package com.sparta.hibernatedemo.entities;
 
-import org.hibernate.annotations.Cascade;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.Instant;
 
 @Entity
-@Table(name = "film_actor", indexes = {
-        @Index(name = "idx_fk_film_id", columnList = "film_id")
-})
-
-public class FilmActor {
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+@Table(name = "film_category")
+public class FilmCategory {
     @EmbeddedId
-    private FilmActorId id;
+    private FilmCategoryId id;
 
     @Column(name = "last_update", nullable = false)
     private Instant lastUpdate;
@@ -26,11 +23,11 @@ public class FilmActor {
         this.lastUpdate = lastUpdate;
     }
 
-    public FilmActorId getId() {
+    public FilmCategoryId getId() {
         return id;
     }
 
-    public void setId(FilmActorId id) {
+    public void setId(FilmCategoryId id) {
         this.id = id;
     }
 }
