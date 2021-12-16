@@ -54,7 +54,8 @@ public class StoreController {
         if (storeRepository.existsById(id_to_delete)){
             Store store = storeRepository.getById(id_to_delete);
             storeRepository.deleteById(id_to_delete);
-            staffRepository.deleteById(store.getManagerStaff().getId());
+            List<Staff> allStaff = staffRepository.store_id(store.getId());
+            staffRepository.deleteAllInBatch(allStaff);
             return new ResponseEntity<>("Delete Successful", HttpStatus.OK);
         } else return new ResponseEntity<>("Store specified not found", HttpStatus.NOT_FOUND);
     }
