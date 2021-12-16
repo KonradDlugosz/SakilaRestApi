@@ -29,6 +29,14 @@ public class Store {
     @Column(name = "last_update", nullable = false)
     private Instant lastUpdate;
 
+    public Store(Integer id){
+        this.id = id;
+    }
+
+    public Store(){
+
+    }
+
     public Instant getLastUpdate() {
         return lastUpdate;
     }

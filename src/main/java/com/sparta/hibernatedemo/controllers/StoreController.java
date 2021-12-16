@@ -58,8 +58,9 @@ public class StoreController {
     }
 
     @PostMapping(value = "/sakila/store/create")
-    public Store createNewStore(@RequestBody Store newStore){
-        return storeRepository.save(newStore);
+    public ResponseEntity<?> createNewStore(@RequestBody Store newStore){
+        storeRepository.save(newStore);
+        return new ResponseEntity<>("Yay", HttpStatus.I_AM_A_TEAPOT);
     }
 
     @GetMapping(value = "/sakila/store/getstoreandstaff/{id_of_store}")

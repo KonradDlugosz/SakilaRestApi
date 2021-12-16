@@ -46,6 +46,13 @@ public class Staff {
     @Column(name = "last_update", nullable = false)
     private Instant lastUpdate;
 
+    public Staff(Integer id){
+        this.id = id;
+    }
+
+    public Staff(){
+
+    }
 
     public String getFirstName() {
         return firstName;
