@@ -1,7 +1,10 @@
 package com.sparta.hibernatedemo.controllers;
 
 import com.sparta.hibernatedemo.entities.Actor;
+import com.sparta.hibernatedemo.entities.FilmActor;
+import com.sparta.hibernatedemo.entities.FilmActorId;
 import com.sparta.hibernatedemo.repositories.ActorRepository;
+import com.sparta.hibernatedemo.repositories.FilmActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,8 @@ public class ActorController {
 
     @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private FilmActorRepository filmActorRepository;
 
     @GetMapping(value = "/sakila/actors")
     public List<Actor> getActors(){
@@ -73,5 +78,12 @@ public class ActorController {
             return ResponseEntity.ok(updatedActor);
         } else
             return null;
+    }
+
+//    Pulls FilmActor Composite key in JSON
+
+    @GetMapping(value = "/sakila/ckey")
+    public List<FilmActor> getCkey(){
+        return filmActorRepository.findAll();
     }
 }
