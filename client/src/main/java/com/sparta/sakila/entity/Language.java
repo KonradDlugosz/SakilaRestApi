@@ -1,8 +1,8 @@
-package com.sprata.sakila.entity;
+package com.sparta.sakila.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Address{
+public class Language{
 
 	@JsonProperty("id")
 	private Integer id;

@@ -97,8 +97,11 @@ public class FilmController {
         return new ResponseEntity<String>("{\"message\":\"Film does not exist\"}", headers, HttpStatus.OK);
     }
 
-
-
+    @PostMapping(value = "/sakila/films/add")
+    public ResponseEntity<?> addNewFilm(@RequestBody Film newFilm){
+        filmRepository.save(newFilm);
+        return new ResponseEntity<>("Film was added successfully", HttpStatus.CREATED);
+    }
 
 
     @GetMapping(value = "sakila/film_text/{filmId}")
