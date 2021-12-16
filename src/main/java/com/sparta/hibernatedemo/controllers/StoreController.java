@@ -52,14 +52,18 @@ public class StoreController {
     @DeleteMapping(value = "sakila/store/deletebyid/{id_to_delete}")
     public ResponseEntity<String> deleteStore(@PathVariable int id_to_delete){
         if (storeRepository.existsById(id_to_delete)){
+            Store store = storeRepository.getById(id_to_delete);
             storeRepository.deleteById(id_to_delete);
+            List<Staff> allStaff = staffRepository.store_id(store.getId());
+            staffRepository.deleteAllInBatch(allStaff);
             return new ResponseEntity<>("Delete Successful", HttpStatus.OK);
         } else return new ResponseEntity<>("Store specified not found", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/sakila/store/create")
-    public Store createNewStore(@RequestBody Store newStore){
-        return storeRepository.save(newStore);
+    public ResponseEntity<?> createNewStore(@RequestBody Store newStore){
+        storeRepository.save(newStore);
+        return new ResponseEntity<>("Store was added sucessfully", HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/sakila/store/getstoreandstaff/{id_of_store}")

@@ -1,7 +1,6 @@
 package com.sparta.hibernatedemo.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.Instant;
