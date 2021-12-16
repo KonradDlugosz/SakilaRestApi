@@ -1,4 +1,4 @@
-package com.sprata.sakila.entity;
+package com.sprata.sakila.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
