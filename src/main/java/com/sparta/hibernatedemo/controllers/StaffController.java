@@ -42,7 +42,7 @@ public class StaffController {
         Map<String,Boolean> response = new HashMap<>();
 
         if(staff.isPresent()){
-            staffRepository.delete(staff.get());
+            staffRepository.deleteById(staff.get().getId());
             response.put("Deleted", Boolean.TRUE);
         } else {
             response.put("Deleted", Boolean.FALSE);
