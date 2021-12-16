@@ -1,77 +1,85 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprata.sakila.entity.Staff;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
-import static com.sprata.sakila.StaffRequests.getOneStaffJsonBody;
+import static com.sprata.sakila.StaffRequests.*;
 
 public class StaffTest {
 
-    public static Staff staff = null;
+    public static Staff getOneStaff = null;
+    public static Staff postStaff = null;
 
 
     @BeforeAll
     public static void getConnection(){
-        staff = getOneStaffJsonBody();
+        getOneStaff = getOneStaffJsonBody();
+        postStaff = postOneStaffJsonBody();
     }
 
+    /**
+     * Tests for GET by ID
+     */
 
     @Test
-    @DisplayName("Given Id one, Return id")
+    @DisplayName("1.1 Given Id one, Return id")
     public void getStaffId(){
-        Assertions.assertEquals(1, staff.getId());
+        Assertions.assertEquals(1, getOneStaff.getId());
     }
 
     @Test
-    @DisplayName("Given Id one, Return first name")
+    @DisplayName("1.2 Given Id one, Return first name")
     public void getStaffFirstName(){
-        Assertions.assertEquals("Mike", staff.getFirstName());
+        Assertions.assertEquals("Mike", getOneStaff.getFirstName());
     }
 
     @Test
-    @DisplayName("Given Id one, Return last name")
+    @DisplayName("1.3 Given Id one, Return last name")
     public void getStaffLastName(){
-        Assertions.assertEquals("Hillyer", staff.getLastName());
+        Assertions.assertEquals("Hillyer", getOneStaff.getLastName());
     }
 
     @Test
-    @DisplayName("Given Id one, Return address")
+    @DisplayName("1.4 Given Id one, Return address")
     public void getStaffAddress(){
-        Assertions.assertEquals(3, staff.getAddress().getId());
+        Assertions.assertEquals(3, getOneStaff.getAddress().getId());
     }
 
     @Test
-    @DisplayName("Given Id one, Return email")
+    @DisplayName("1.5 Given Id one, Return email")
     public void getStaffEmail(){
-        Assertions.assertEquals("Mike.Hillyer@sakilastaff.com", staff.getEmail());
+        Assertions.assertEquals("Mike.Hillyer@sakilastaff.com", getOneStaff.getEmail());
     }
 
     @Test
-    @DisplayName("Given Id one, Return status")
+    @DisplayName("1.6 Given Id one, Return status")
     public void getStaffActivationStatus(){
-        Assertions.assertTrue(staff.isActive());
+        Assertions.assertTrue(getOneStaff.isActive());
     }
 
     @Test
-    @DisplayName("Given Id one, Return username")
+    @DisplayName("1.7 Given Id one, Return username")
     public void getStaffUsername(){
-        Assertions.assertEquals("Mike", staff.getUsername());
+        Assertions.assertEquals("Mike", getOneStaff.getUsername());
     }
 
     @Test
-    @DisplayName("Given Id one, Return lastUpdate")
+    @DisplayName("1.8 Given Id one, Return lastUpdate")
     public void getStaffLastUpdate(){
-        Assertions.assertEquals("2006-02-15T03:57:16Z", staff.getLastUpdate());
+        Assertions.assertEquals("2006-02-15T03:57:16Z", getOneStaff.getLastUpdate());
+    }
+
+
+    /**
+     * Tests for POST request
+     */
+
+    @Test
+    @DisplayName("2.1 Given body to insert, Return first name")
+    public void postStaffName(){
+        Assertions.assertEquals("Konrad", postStaff.getFirstName());
+
     }
 
 }

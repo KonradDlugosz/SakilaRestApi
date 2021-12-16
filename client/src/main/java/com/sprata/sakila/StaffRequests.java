@@ -42,6 +42,7 @@ public class StaffRequests {
         return staff;
     }
 
+
     /**
      * POST Staff
      * @return JSON body for new staff
@@ -49,8 +50,11 @@ public class StaffRequests {
 
     public static HttpResponse<String> insertNewStaff(){
         String post = "http://localhost:8080/sakila/staff/create";
-        //TODO Change to POST request.
         HttpRequest request= HttpRequest.newBuilder().uri(URI.create(post))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString("{\"firstName\": \"Konrad\", \"lastName\": \"Dlugosz\",\"address\": { \"id\": 4 }, " +
+                        "\"picture\": null, \"email\":\"Jon.Stephens@sakilastaff.com\", \"store\": 1, \"active\": true,\"username\": " +
+                        "\"Jon\",\"password\": null, \"lastUpdate\": \"2006-02-15T03:57:16Z\"}"))
                 .build();
 
         HttpClient client = HttpClient.newHttpClient();
@@ -61,5 +65,20 @@ public class StaffRequests {
             e.printStackTrace();
         }
         return response;
+    }
+
+    public static Staff postOneStaffJsonBody(){
+        String json = insertNewStaff().body();
+        System.out.println(json);
+
+        ObjectMapper mapper = new ObjectMapper();
+        Staff staff = null;
+        try {
+            staff = mapper.readValue(json, Staff.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return staff;
+
     }
 }
