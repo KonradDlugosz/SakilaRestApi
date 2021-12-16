@@ -36,4 +36,20 @@ public class FilmText{
 	public String getTitle(){
 		return title;
 	}
+
+	public String toJson(){
+		String data = "{\"id\":\" "
+				+id+
+				"\",\"title\":\""
+				+title+
+				"\",\"description\":\""
+				+description+
+				"\"}";
+		return data;
+
+		}
+
+
+
+
 }
