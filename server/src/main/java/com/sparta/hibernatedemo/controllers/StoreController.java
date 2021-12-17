@@ -1,5 +1,7 @@
 package com.sparta.hibernatedemo.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.hibernatedemo.entities.Staff;
 import com.sparta.hibernatedemo.entities.Store;
 import com.sparta.hibernatedemo.repositories.StaffRepository;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +44,22 @@ public class StoreController {
     }
 
     @PatchMapping(value = "sakila/store/update")
-    public ResponseEntity<?> updateStore(@RequestBody Store newState){
-        if (storeRepository.existsById(newState.getId())){
-            
-            storeRepository.save(newState);
-            return new ResponseEntity<>(newState, HttpStatus.ACCEPTED);
-        } else return new ResponseEntity<>("Store with ID: " + newState.getId() + " not found!", HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> updateStore(@RequestBody String newStateString){
+        ObjectMapper mapper = new ObjectMapper();
+        Store newStore = null;
+        try {
+            newStore = mapper.readValue(newStateString, Store.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if (newStore!= null) {
+            if (storeRepository.existsById(newStore.getId())) {
+                newStore.setLastUpdate(Instant.now());
+                newStore.setManagerStaff(storeRepository.getById(newStore.getId()).getManagerStaff());
+                storeRepository.save(newStore);
+                return new ResponseEntity<>(newStore, HttpStatus.ACCEPTED);
+            } else return new ResponseEntity<>("Store with ID: " + newStore.getId() + " not found!", HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>("Unable to construct valid entity from provided data", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping(value = "sakila/store/deletebyid/{id_to_delete}")

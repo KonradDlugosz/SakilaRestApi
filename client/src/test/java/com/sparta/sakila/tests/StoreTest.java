@@ -1,7 +1,7 @@
 package com.sparta.sakila.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sprata.sakila.entity.Store;
+import com.sparta.sakila.entity.Store;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
