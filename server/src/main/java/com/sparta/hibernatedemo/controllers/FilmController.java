@@ -1,5 +1,6 @@
 package com.sparta.hibernatedemo.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.hibernatedemo.entities.*;
 import com.sparta.hibernatedemo.repositories.*;
@@ -103,6 +104,9 @@ public class FilmController {
         return new ResponseEntity<>("Film was added successfully", HttpStatus.CREATED);
     }
 
+
+
+
     @GetMapping(value = "sakila/film_text")
     public ResponseEntity<?> getAllFilm(){
         return ResponseEntity.of(Optional.of(filmTextRepository.findAll()));
@@ -122,45 +126,76 @@ public class FilmController {
 
 
 
-
     @PostMapping(value = "/sakila/film_text/add")
     public ResponseEntity<?> addFilm(@RequestBody FilmText filmText){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
         Optional<FilmText> filmExist = filmTextRepository.findById(filmText.getId());
         if (filmExist.isPresent()){
-            return ResponseEntity.status(HttpStatus.IM_USED).body("Already Exist \n");
+            return new ResponseEntity("{\"message\":\"Film Already Exist\"}",headers,HttpStatus.OK);
         }
         FilmText fT = new FilmText();
         fT.setId(filmText.getId());
         fT.setTitle(filmText.getTitle());
         fT.setDescription(filmText.getDescription());
         filmTextRepository.save(fT);
-        return ResponseEntity.of(Optional.of(fT));
+        String message = "{\"message\":\"Film Added\",\"film\":";
+        String values = "   {\"id\":\""
+                +fT.getId()+
+                "\",\"title\":\""
+                +fT.getTitle()+
+                "\",\"description\":\""
+                +fT.getDescription()+
+                "\"}";
+        String bodyMessage = message + values + "}";
+        return new ResponseEntity<String>(bodyMessage,headers,HttpStatus.OK);
     }
 
     @PatchMapping(value = "/sakila/film_text/update")
     public ResponseEntity<?> updateFilmText(@RequestBody FilmText film){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
         Optional<FilmText> filmExist  = filmTextRepository.findById(film.getId());
         if (filmExist.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
+            return new ResponseEntity<String>("{\"message\":\"Film Does Not Exist with ID "+film.getId()+"\"}", headers, HttpStatus.OK);
         }
         filmExist.get().setDescription(film.getDescription());
         filmExist.get().setTitle(film.getTitle());
-        final FilmText fT = filmTextRepository.save(filmExist.get());
-        return ResponseEntity.ok(fT);
+        filmTextRepository.save(filmExist.get());
+        String message = "{\"message\":\"Film Updated\",\"film\":";
+        String values = "   {\"id\":\""
+                +film.getId()+
+                "\",\"title\":\""
+                +film.getTitle()+
+                "\",\"description\":\""
+                +film.getDescription()+
+                "\"}";
+        String bodyMessage = message + values + "}";
+        return new ResponseEntity<String>(bodyMessage,headers,HttpStatus.OK);
     }
 
 
     @DeleteMapping(value = "/sakila/film_text/delete/{id}")
-    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id){
+    public ResponseEntity<?> deleteFilmText(@PathVariable Integer id){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
         Optional<FilmText> filmText = filmTextRepository.findById(id);
         if ( filmText.isPresent()){
             filmTextRepository.delete(filmTextRepository.getById(id));
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+            String message = "{\"message\":\"Film Deleted\",\"film\":";
+            String values = "{\"id\":\""
+                    +filmText.get().getId()+
+                    "\",\"title\":\""
+                    +filmText.get().getTitle()+
+                    "\",\"description\":\""
+                    +filmText.get().getDescription()+
+                    "\"}";
+            String bodyMessage = message + values + "}";
+            return new ResponseEntity<String>(bodyMessage,headers,HttpStatus.OK);
         }
         else{
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return new ResponseEntity<String>("{\"message\":\"No film exist with id " +id + "\"}", headers, HttpStatus.OK);
         }
-
     }
 }
 
