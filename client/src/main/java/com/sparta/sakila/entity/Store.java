@@ -7,7 +7,7 @@ public class Store {
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("managerInfo")
+    @JsonProperty("managerStaff")
     private Staff managerStaff;
 
     @JsonProperty("address")
