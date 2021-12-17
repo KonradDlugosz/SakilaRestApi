@@ -92,7 +92,7 @@ public class StoreTest{
     public void deleteStore(){
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create("http://localhost:8080/sakila/store/deletebyid/19"))
+                .uri(URI.create("http://localhost:8080/sakila/store/deletebyid/6"))
                 .DELETE()
                 .build();
         HttpClient client = HttpClient.newHttpClient();
@@ -107,7 +107,30 @@ public class StoreTest{
 
     @Test
     public void updateStore(){
-        
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create("http://localhost:8080/sakila/store/update"))
+                .PUT(HttpRequest.BodyPublishers.ofString("""
+                        {
+                               "id": 6,
+                               "managerStaff": {
+                                   "id": 3
+                               },
+                               "address": {
+                                   "id": 12
+                               },
+                               "lastUpdate": "2006-02-15T04:57:12Z"
+                           }""".indent(1)))
+                .header("content-type", "application/json")
+                .build();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(202, response.statusCode());
     }
 
 }

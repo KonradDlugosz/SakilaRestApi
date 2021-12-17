@@ -40,28 +40,30 @@ public class StoreController {
         else return new ResponseEntity<>("Store with ID: " + id + " was not found", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping(value = "sakila/store/update")
+    @PatchMapping(value = "sakila/store/update")
     public ResponseEntity<?> updateStore(@RequestBody Store newState){
         if (storeRepository.existsById(newState.getId())){
+            
             storeRepository.save(newState);
             return new ResponseEntity<>(newState, HttpStatus.ACCEPTED);
-        }
-        else return new ResponseEntity<>(newState, HttpStatus.CREATED);
+        } else return new ResponseEntity<>("Store with ID: " + newState.getId() + " not found!", HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping(value = "sakila/store/deletebyid/{id_to_delete}")
     public ResponseEntity<String> deleteStore(@PathVariable int id_to_delete){
         if (storeRepository.existsById(id_to_delete)){
-            Store store = storeRepository.getById(id_to_delete);
+            List<Staff> staffFromStore = staffRepository.findByStore_id(id_to_delete);
+            for (Staff member: staffFromStore){
+                member.setStore(storeRepository.getById(20));
+            }
+            staffRepository.saveAll(staffFromStore);
             storeRepository.deleteById(id_to_delete);
-            List<Staff> allStaff = staffRepository.store_id(store.getId());
-            staffRepository.deleteAllInBatch(allStaff);
             return new ResponseEntity<>("Delete Successful", HttpStatus.OK);
         } else return new ResponseEntity<>("Store specified not found", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/sakila/store/create")
-    public ResponseEntity<?> createNewStore(@RequestBody Store newStore){
+    public ResponseEntity<String> createNewStore(@RequestBody Store newStore){
         storeRepository.save(newStore);
         return new ResponseEntity<>("Store was added sucessfully", HttpStatus.CREATED);
     }
@@ -70,7 +72,7 @@ public class StoreController {
     public ResponseEntity<?> getStoreAndStaff(@PathVariable int id_of_store){
         if (storeRepository.existsById(id_of_store)) {
             Store store = storeRepository.getById(id_of_store);
-            List<Staff> allStaff = staffRepository.store_id(id_of_store);
+            List<Staff> allStaff = staffRepository.findByStore_id(id_of_store);
             List<?> responseBody = List.of(store, allStaff);
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
