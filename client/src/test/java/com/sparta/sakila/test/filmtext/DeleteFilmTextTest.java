@@ -15,12 +15,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class FilmTextPostTest {
+public class DeleteFilmTextTest {
     static int fId = 1001;
     static String fTitle ="Sparta Global";
     static String fDescription = "Where undergraduates comes for upskilling!";
-
-
     static FilmTextAdd filmTextAdd = null;
 
     // @DisplayName("Gets all the film details from the film Text")
@@ -29,27 +27,24 @@ public class FilmTextPostTest {
         filmAdd.setId(fId);
         filmAdd.setTitle(fTitle);
         filmAdd.setDescription(fDescription);
-        String s = filmAdd.toJson(); //Implemented toJson method to convert the string into json format type
-       /**
-        * This way also be used for building the json body
-        */
-       /*
-        ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String,String> values = new HashMap<>();
-        values.put("id", filmAdd.getId().toString());
-        values.put("title", filmAdd.getTitle());
-        values.put("description", filmAdd.getDescription());
-        String body = null;
-        try {
-             body = objectMapper.writeValueAsString(s);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        */
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/sakila/film_text/add"))
+        String s = filmAdd.toJson();
+        HttpRequest postRquest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/sakila/film_text/add"))
                 .headers("content-type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(s))
-        .build();
+                .build();
+
+        try {
+             HttpClient.newHttpClient().send(postRquest, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/sakila/film_text/delete/1001"))
+                .headers("content-type", "application/json")
+                .DELETE()
+                .build();
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> resq = null;
         try {
@@ -69,7 +64,7 @@ public class FilmTextPostTest {
             String json = response.body();
             ObjectMapper mapper = new ObjectMapper();
             try {
-               FilmTextAdd filmTextAdds = mapper.readValue(json, FilmTextAdd.class);
+                FilmTextAdd filmTextAdds = mapper.readValue(json, FilmTextAdd.class);
                 return filmTextAdds;
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -82,6 +77,8 @@ public class FilmTextPostTest {
     public static void getJson(){
         filmTextAdd = jsonConverter();
     }
+
+
 
     @DisplayName("Given that film has been inserted, return data id should match the inserted data")
     @Test
@@ -104,8 +101,13 @@ public class FilmTextPostTest {
     @DisplayName("Given that film already exist, return should display message of it being existing already")
     @Test
     public void getFilmTextBeingExistAlready(){
-        Assertions.assertFalse((filmTextAdd.getMessage().equals("Film Already Exist")));
+        Assertions.assertFalse((filmTextAdd.getMessage().equals("No film exist with id " +fId)));
     }
+
+
+
+
+
 
 
 
