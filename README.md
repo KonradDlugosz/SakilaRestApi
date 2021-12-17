@@ -20,9 +20,9 @@
       <a href="#http-requests">HTTP Requests</a>
       <ul>
         <li><a href="#get-requests">GET Requests</a></li>
-          <li><a href="#post-requests">POST Requets</a></li>
-          <li><a href="#put-requests">PUT Requets</a></li>
-          <li><a href="#delete-requests">DELETE Requets</a></li>
+          <li><a href="#post-requests">POST Requests</a></li>
+          <li><a href="#put-requests">PUT Requests</a></li>
+          <li><a href="#delete-requests">DELETE Requests</a></li>
       </ul>
     </li>
       <li><a href="#tools">Tools and Frameworks</a></li>
@@ -87,7 +87,7 @@ You will also need MySQL installed and Sakila database: https://dev.mysql.com/do
 
 ## HTTP Requests
 
-HTTP defines a set of **requests methods** to indicate the desired action to performed in Sakila database. 
+HTTP defines a set of **request methods** to indicate the desired action to performed in Sakila database. 
 
 ### GET Requests
 
@@ -103,7 +103,23 @@ This section contains list of GET requests for Sakila database:
 
 ### PUT Requests
 
+### PATCH Requests
+
+HTTP ```PATCH``` Requests are supported by all tables except the Staff table, which should instead use ```PUT``` requests only.
+Endpoints follow the pattern of ```table_name/update```, where the request body should consist of JSON that represents the new state.
+For all tables except the Store table, this should include the last_update element, but for the Store table this should *NOT* be given, as it will be added automatically.
+
+An example endpoint for performing a ```PATCH``` request would be ```/actor/update```
+
+Endpoints will return a ```200``` if the request was good, with a message to indicate the success or failure, except for the Store endpoint, which will return ```202``` for a successful request, ```400``` if the request provided invalid JSON but for an existing store, and ```404``` for stores that do not exist. 
+
 ### DELETE Requests
+
+HTTP ```DELETE``` Requests are supported for all tables included as part of the API. Endpoints follow the pattern of ```table_name/delete/id```, where the supplied ID is the ID that uniquely identifies the record in the DB.
+
+An example endpoint to ```DELETE``` the Store with ID 1 would be ```/store/delete/1```
+
+Depending on the endpoint, a message will be displayed announcing the success or failure of the operation. The status code will be ```200``` for all except the Stores, which will return ```200``` if successful or ```404``` if the ID was not found.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>

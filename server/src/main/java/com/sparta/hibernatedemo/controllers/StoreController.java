@@ -62,7 +62,7 @@ public class StoreController {
         } else return new ResponseEntity<>("Unable to construct valid entity from provided data", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping(value = "sakila/store/deletebyid/{id_to_delete}")
+    @DeleteMapping(value = "sakila/store/delete/{id_to_delete}")
     public ResponseEntity<String> deleteStore(@PathVariable int id_to_delete){
         if (storeRepository.existsById(id_to_delete)){
             List<Staff> staffFromStore = staffRepository.findByStore_id(id_to_delete);
