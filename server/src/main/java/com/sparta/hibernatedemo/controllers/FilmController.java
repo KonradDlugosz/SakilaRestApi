@@ -35,6 +35,9 @@ public class FilmController {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private ActorRepository actorRepository;
+
     @GetMapping(value = "/sakila/films")
     public List<Film> getFilms() {
         return filmRepository.findAll();
@@ -71,15 +74,15 @@ public class FilmController {
     }
 
     @DeleteMapping(value = "sakila/films/delete/{id}")
-    public ResponseEntity<String> deleteFilm(@PathVariable Integer id){
+    public ResponseEntity<String> deleteFilm(@PathVariable Integer id) {
 
-        List<FilmActor> filmActors = filmActorRepository.findAll().stream().filter( s -> s.getId().getFilmId() == id).toList();
+        List<FilmActor> filmActors = filmActorRepository.findAll().stream().filter(s -> s.getId().getFilmId() == id).toList();
         filmActorRepository.deleteAllInBatch(filmActors);
 
-        List<FilmCategory> filmCategories = filmCategoryRepository.findAll().stream().filter( s -> s.getId().getFilmId() == id).toList();
+        List<FilmCategory> filmCategories = filmCategoryRepository.findAll().stream().filter(s -> s.getId().getFilmId() == id).toList();
         filmCategoryRepository.deleteAllInBatch(filmCategories);
 
-        List<Inventory> inventories = inventoryRepository.findAll().stream().filter( s -> s.getFilm().getId() == id).toList();
+        List<Inventory> inventories = inventoryRepository.findAll().stream().filter(s -> s.getFilm().getId() == id).toList();
 
         List<Rental> rentals = rentalRepository.findAll().stream().filter(s -> s.getInventory().getFilm().getId() == id).toList();
         rentalRepository.deleteAllInBatch(rentals);
@@ -90,15 +93,12 @@ public class FilmController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-type", "application/json");
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             filmRepository.deleteById(id);
-            return new ResponseEntity<String>("{\"message\":\"Film Deleted\"}",headers, HttpStatus.OK);
+            return new ResponseEntity<String>("{\"message\":\"Film Deleted\"}", headers, HttpStatus.OK);
         }
         return new ResponseEntity<String>("{\"message\":\"Film does not exist\"}", headers, HttpStatus.OK);
     }
-
-
-
 
 
     @GetMapping(value = "sakila/film_text/{filmId}")
@@ -114,9 +114,9 @@ public class FilmController {
 
 
     @PostMapping(value = "/sakila/film_text/add")
-    public ResponseEntity<?> addFilm(@RequestBody FilmText filmText){
+    public ResponseEntity<?> addFilm(@RequestBody FilmText filmText) {
         Optional<FilmText> filmExist = filmTextRepository.findById(filmText.getId());
-        if (filmExist.isPresent()){
+        if (filmExist.isPresent()) {
             return ResponseEntity.status(HttpStatus.IM_USED).body("Already Exist \n");
         }
         FilmText fT = new FilmText();
@@ -128,9 +128,9 @@ public class FilmController {
     }
 
     @PatchMapping(value = "/sakila/film_text/update")
-    public ResponseEntity<?> updateFilmText(@RequestBody FilmText film){
-        Optional<FilmText> filmExist  = filmTextRepository.findById(film.getId());
-        if (filmExist.isEmpty()){
+    public ResponseEntity<?> updateFilmText(@RequestBody FilmText film) {
+        Optional<FilmText> filmExist = filmTextRepository.findById(film.getId());
+        if (filmExist.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
         }
         filmExist.get().setDescription(film.getDescription());
@@ -141,16 +141,21 @@ public class FilmController {
 
 
     @DeleteMapping(value = "/sakila/film_text/delete/{id}")
-    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id){
+    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id) {
         Optional<FilmText> filmText = filmTextRepository.findById(id);
-        if ( filmText.isPresent()){
+        if (filmText.isPresent()) {
             filmTextRepository.delete(filmTextRepository.getById(id));
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
+    }
 
+    //    GetFilmsbyActorID
+    @GetMapping(value = "/sakila/films/byActorId")
+    public List<FilmActor> getFilmbyActorId(@RequestParam Integer id) {
+        List<FilmActor>  filmsbyActorId = filmActorRepository.findAll().stream().filter(s -> s.getId().getActorId() == id).toList();
+            return filmsbyActorId;
     }
 }
 
