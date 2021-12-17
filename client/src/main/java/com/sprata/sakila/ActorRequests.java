@@ -14,7 +14,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ActorRequests {
 
@@ -33,7 +35,7 @@ public class ActorRequests {
 
     public static Actor getOneActors() {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/sakila/actors/12"))
+                .uri(URI.create("http://localhost:8080/sakila/actors/1"))
                 .GET()
                 .build();
         HttpClient client = HttpClient.newHttpClient();
@@ -74,7 +76,7 @@ public class ActorRequests {
         return a;
     }
 
-
+/*
     public static Map<String,Boolean> deleteOneActor(){
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/sakila/actors/201"))
@@ -91,8 +93,19 @@ public class ActorRequests {
         }
         ////Map<String, Boolean> a = getActor(resp.body());
         ////return a;
+        Optional<Actor> actor = actorRepository.findById(id);
+        if(actor.isPresent())
+            actorRepository.delete(actor.get());
+        else
+            return null;
+
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("Deleted", Boolean.TRUE);
+        return response;
 
     }
+
+ */
 
     public static Actor putActor(){
         HttpRequest req = null;
@@ -123,7 +136,7 @@ public class ActorRequests {
             req = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:8080/sakila/actors/update"))
                     .PUT(HttpRequest.BodyPublishers.ofFile(Path.of("updateFirstNameOnly.json")))
-                    ////////////////////////////////
+
                     .build();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

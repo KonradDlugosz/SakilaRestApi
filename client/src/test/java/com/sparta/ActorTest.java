@@ -15,12 +15,12 @@ public class ActorTest {
     @DisplayName("Get actor when given id")
     public void getActor(){
         actor1 = getOneActors();
-        Assertions.assertEquals(12,actor1.getId());
-        Assertions.assertEquals("KARL",actor1.getFirstName());
-        Assertions.assertEquals("BERRY",actor1.getLastName());
+        Assertions.assertEquals(1,actor1.getId());
+        Assertions.assertEquals("PENELOPE",actor1.getFirstName());
+        Assertions.assertEquals("GUINESS",actor1.getLastName());
         Assertions.assertEquals("2006-02-15T04:34:33Z",actor1.getLastUpdate());
     }
-
+/*
     @Test
     @DisplayName("creating a actor")
     public void createNewActor(){
@@ -31,11 +31,14 @@ public class ActorTest {
         Assertions.assertEquals("2031-02-11T04:34:33Z",actor1.getLastUpdate());
     }
 
+
     @Test
     @DisplayName("delete actor")
     public void actorDelete(){
 
     }
+
+
 
     @Test
     @DisplayName("PUT actor")
@@ -58,6 +61,6 @@ public class ActorTest {
     }
 
 
-
+*/
 
 }
