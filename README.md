@@ -43,7 +43,7 @@ Server hosts the developed REST API which includes all the CRUD operations and a
 
 The purpose of client in this project is to send a http request to the server and receive JSON response which than is dieselized into java object, this is done using Jackson. Afterwards, these objects are used in Junit testing to check that the server response is as expected. Another way of testing the server can be done by browser, however it only supports GET request. Alternatively, Postman supports all types of HTTP requests however this requires manually test for each requests whereas the client tests all requests automatically. 
 
-
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Getting Started
 
@@ -83,7 +83,7 @@ You will also need MySQL installed and Sakila database: https://dev.mysql.com/do
    java RunServer
    ```
 
-   
+   <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## HTTP Requests
 
@@ -91,17 +91,17 @@ HTTP defines a set of **request methods** to indicate the desired action to perf
 
 ### GET Requests
 
-This section contains list of GET requests for Sakila database: 
+HTTP GET request are supported across all the tables in the database. 
 
-##### GET all staff requests:
+Endpoint follows the pattern of `/table_name/id` which id is optional if return only specified element by id. 
 
-`GET /staff/all` 
-
-
+An example endpoint for staff table would be as follows `/staff/1`. This would return all details about staff member with id of one. 
 
 ### POST Requests
 
-### PUT Requests
+HTTP ```POST``` Requests are supported by all tables. Endpoints follow the pattern of ```table_name/create```, where the request body should consist of JSON that represents the new state to be created. When inserting new element in most cases you don't have to provide ID as it will be auto generated. 
+
+An example endpoint for posting new staff would include request `staff/create`. This would need include the JSON body that will be inserted into the staff table. If the JSON body is correct it will return a response with status code of `200`.
 
 ### PATCH Requests
 
@@ -121,5 +121,25 @@ An example endpoint to ```DELETE``` the Store with ID 1 would be ```/store/delet
 
 Depending on the endpoint, a message will be displayed announcing the success or failure of the operation. The status code will be ```200``` for all except the Stores, which will return ```200``` if successful or ```404``` if the ID was not found.
 
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+## Tools and Frameworks
+
+This section contains all the tools and frameworks that were used in this project. 
+
+### Spring Boot
+
+Spring boot was used to develop RESTful web service as it makes it easy to build API. It provides auto configurated production-grade spring application. This allows to get stared quickly without wasting time on configurating Spring application. 
+
+### Hibernate
+
+Hibernate is object-relational mapping tool for java which provides framework for mapping object-oriented model to relational database which in our case is Sakila database. 
+
+### Jackson 
+
+Jackson is a high-performance JSON processor for Java. It allowed to create JSON parsing and also to deserialize JSON into java object by the use of Object mapper which are used in Junit testing.   
 
 <p align="right">(<a href="#top">back to top</a>)</p>
