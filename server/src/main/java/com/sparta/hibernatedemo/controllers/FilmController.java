@@ -3,6 +3,8 @@ package com.sparta.hibernatedemo.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.hibernatedemo.entities.*;
 import com.sparta.hibernatedemo.repositories.*;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -152,10 +154,30 @@ public class FilmController {
     }
 
     //    GetFilmsbyActorID
-    @GetMapping(value = "/sakila/films/byActorId")
-    public List<FilmActor> getFilmbyActorId(@RequestParam Integer id) {
-        List<FilmActor>  filmsbyActorId = filmActorRepository.findAll().stream().filter(s -> s.getId().getActorId() == id).toList();
-            return filmsbyActorId;
+    @GetMapping(value = "/sakila/films/byActorId/{id}")
+    public JSONObject getFilmsbyActorId(@PathVariable Integer id) {
+        List<FilmActor> filmsbyActorId = filmActorRepository.findAll().stream()
+                .filter(s -> s.getId().getActorId() == id).toList();
+
+        JSONObject actor = new JSONObject();
+        JSONObject films = new JSONObject();
+
+        actor.put("Actor id", filmsbyActorId.get(0).getId().getActorId());
+        actor.put("Actor Name", actorRepository.getById(filmsbyActorId.get(0).getId().getActorId()).getFirstName()
+                + " " + actorRepository.getById(filmsbyActorId.get(0).getId().getActorId()).getLastName()); // outputs Actor Name.
+
+        for (int i = 0; i < filmsbyActorId.size(); i++) {
+            films.put("Film id " + filmsbyActorId.get(i).getId().getFilmId() + " Film Name ",
+                    filmRepository.getById(filmsbyActorId.get(i).getId().getFilmId()).getTitle()); // outputs Film ID and Name but put properly.
+
+//            films.put("Film id" + "#" + i, filmsbyActorId.get(i).getId().getFilmId()); //
+//            films.put("Film Name" + "#" + i, filmRepository.getById(filmsbyActorId.get(i).getId().getFilmId()).getTitle());
+        }
+        actor.put("Films", films);
+        return actor;
     }
+
+
+
 }
 

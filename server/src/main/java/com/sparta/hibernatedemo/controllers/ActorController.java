@@ -5,6 +5,8 @@ import com.sparta.hibernatedemo.entities.FilmActor;
 import com.sparta.hibernatedemo.entities.FilmActorId;
 import com.sparta.hibernatedemo.repositories.ActorRepository;
 import com.sparta.hibernatedemo.repositories.FilmActorRepository;
+import com.sparta.hibernatedemo.repositories.FilmRepository;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,42 +26,45 @@ public class ActorController {
     @Autowired
     private FilmActorRepository filmActorRepository;
 
+    @Autowired
+    private FilmRepository filmRepository;
+
     @GetMapping(value = "/sakila/actors")
-    public List<Actor> getActors(){
+    public List<Actor> getActors() {
         return actorRepository.findAll();
     }
 
     @GetMapping(value = "/sakila/actors/{id}")
-    public ResponseEntity<?> getActorById(@PathVariable Integer id){
+    public ResponseEntity<?> getActorById(@PathVariable Integer id) {
         Optional<Actor> actor = actorRepository.findById(id);
-        if(actor.isEmpty())
+        if (actor.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Actor not found!");
         else
             return ResponseEntity.ok(actor.get());
     }
 
     @PostMapping(value = "/sakila/actors/add")
-    public Actor createActor(@Valid @RequestBody Actor actor){
+    public Actor createActor(@Valid @RequestBody Actor actor) {
         return actorRepository.save(actor);
     }
 
     @DeleteMapping(value = "sakila/actors/{id}")
-    public Map<String,Boolean> deleteActor(@PathVariable Integer id){
+    public Map<String, Boolean> deleteActor(@PathVariable Integer id) {
         Optional<Actor> actor = actorRepository.findById(id);
-        if(actor.isPresent())
+        if (actor.isPresent())
             actorRepository.delete(actor.get());
         else
             return null;
 
-        Map<String,Boolean> response = new HashMap<>();
+        Map<String, Boolean> response = new HashMap<>();
         response.put("Deleted", Boolean.TRUE);
         return response;
     }
 
     @PutMapping(value = "sakila/actors/update")
-    public ResponseEntity<Actor> updateActor(@Valid @RequestBody Actor actor){
+    public ResponseEntity<Actor> updateActor(@Valid @RequestBody Actor actor) {
         Optional<Actor> results = actorRepository.findById(actor.getId());
-        if(results.isPresent()){
+        if (results.isPresent()) {
             results.get().setFirstName(actor.getFirstName());
             results.get().setLastName(actor.getLastName());
             results.get().setLastUpdate(actor.getLastUpdate());
@@ -70,9 +75,9 @@ public class ActorController {
     }
 
     @PatchMapping(value = "sakila/actors/update")
-    public ResponseEntity<Actor> updateActorName(@RequestBody Actor newActor){
+    public ResponseEntity<Actor> updateActorName(@RequestBody Actor newActor) {
         Optional<Actor> actor = actorRepository.findById(newActor.getId());
-        if(actor.isPresent()){
+        if (actor.isPresent()) {
             actor.get().setFirstName(newActor.getFirstName());
             final Actor updatedActor = actorRepository.save(actor.get());
             return ResponseEntity.ok(updatedActor);
@@ -81,24 +86,36 @@ public class ActorController {
     }
 
 //    Pulls FilmActor Composite key in JSON
-
     @GetMapping(value = "/sakila/ckey")
-    public List<FilmActor> getCkey(){
+    public List<FilmActor> getCkey() {
         return filmActorRepository.findAll();
 
     }
 
-    @GetMapping(value = "/sakila/test/0")
-    public List<FilmActor> test(){
-        List<FilmActor> filmsbyActorId = filmActorRepository.findAll().stream().filter(s -> s.getId().getActorId() == 1).toList();
-        return filmsbyActorId;
-    }
 
-    //    GetActorsbyFilmID
-    @GetMapping(value = "/sakila/actors/byFilmId")
-    public List<FilmActor> getFilmbyActorId(@RequestParam Integer id) {
-        List<FilmActor>  filmsbyActorId = filmActorRepository.findAll().stream().filter(s -> s.getId().getFilmId() == id).toList();
-        return filmsbyActorId;
+//    GetFilmsbyActorID
+    @GetMapping(value = "/sakila/actors/byFilmId/{id}")
+    public JSONObject getActorsbyFilmId(@PathVariable Integer id) {
+        List<FilmActor> actorsbyfilmId = filmActorRepository.findAll().stream()
+                .filter(s -> s.getId().getFilmId() == id).toList();
+
+        JSONObject film = new JSONObject();
+        JSONObject actors = new JSONObject();
+
+        film.put("Film id", actorsbyfilmId.get(0).getId().getFilmId());
+        film.put("Film Name", filmRepository.getById(actorsbyfilmId.get(0).getId().getFilmId()).getTitle()); // outputs Actor Name.
+
+        for (int i = 0; i < actorsbyfilmId.size(); i++) {
+            actors.put("Actor id " + actorsbyfilmId.get(i).getId().getActorId() + " Actor Name ",
+                    actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getFirstName() + " " +
+                            actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getLastName()); // outputs Film ID and Name but put properly.
+
+//            actors.put("Actor id" + "#" + i, actorsbyfilmId.get(i).getId().getActorId()); //
+//            actors.put("Actor Name", actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getFirstName()
+//                    + " " + actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getLastName());
+        }
+        film.put("Actors", actors);
+        return film;
     }
 
 
