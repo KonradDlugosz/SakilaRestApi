@@ -99,9 +99,9 @@ public class FilmController {
     }
 
     @PostMapping(value = "/sakila/films/add")
-    public ResponseEntity<?> addNewFilm(@RequestBody Film newFilm){
+    public ResponseEntity<Film> addNewFilm(@RequestBody Film newFilm){
         filmRepository.save(newFilm);
-        return new ResponseEntity<>("Film was added successfully", HttpStatus.CREATED);
+        return ResponseEntity.ok(newFilm);
     }
 
 
