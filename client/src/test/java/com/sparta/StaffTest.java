@@ -12,7 +12,6 @@ public class StaffTest {
 
     public static Staff staff = null;
 
-
     @BeforeAll
     public static void getConnection(){
         staff = getOneStaffJsonBody();
