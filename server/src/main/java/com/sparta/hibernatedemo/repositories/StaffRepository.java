@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
-    List<Staff> store_id(Integer store_id);
+    List<Staff> findByStore_id(Integer store_id);
 }
