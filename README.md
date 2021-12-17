@@ -149,3 +149,12 @@ Hibernate is Object-Relational Mapping (ORM) tool for Java which provides a fram
 Jackson is a high-performance JSON processor for Java. It allows the creation of JSON from Java objects and also to deserialize JSON into a Java object by the use of the ```ObjectMapper``` which are used in the JUnit tests.   
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Authors
+
+* [Konrad Dlugosz](https://github.com/KonradDlugosz)
+* [Mark Burnett](https://github.com/djfrigid)
+* [Nikolaos Papadopoulos](https://github.com/djfrigid)
+* [Pruthvi Lalij](https://github.com/pruthvi-lalji)
+* [Ria Janani](https://github.com/Ria622)
+* [Ed Bencito](https://github.com/Moodhunter34) 
