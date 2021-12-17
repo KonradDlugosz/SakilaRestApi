@@ -98,13 +98,13 @@ public class FilmController {
     }
 
     @PostMapping(value = "/sakila/films/add")
-    public ResponseEntity<?> addNewFilm(@RequestBody Film newFilm){
+    public ResponseEntity<?> addNewFilm(@RequestBody Film newFilm) {
         filmRepository.save(newFilm);
         return new ResponseEntity<>("Film was added successfully", HttpStatus.CREATED);
     }
 
     @GetMapping(value = "sakila/film_text")
-    public ResponseEntity<?> getAllFilm(){
+    public ResponseEntity<?> getAllFilm() {
         return ResponseEntity.of(Optional.of(filmTextRepository.findAll()));
     }
 
@@ -121,12 +121,10 @@ public class FilmController {
     }
 
 
-
-
     @PostMapping(value = "/sakila/film_text/add")
-    public ResponseEntity<?> addFilm(@RequestBody FilmText filmText){
+    public ResponseEntity<?> addFilm(@RequestBody FilmText filmText) {
         Optional<FilmText> filmExist = filmTextRepository.findById(filmText.getId());
-        if (filmExist.isPresent()){
+        if (filmExist.isPresent()) {
             return ResponseEntity.status(HttpStatus.IM_USED).body("Already Exist \n");
         }
         FilmText fT = new FilmText();
@@ -138,9 +136,9 @@ public class FilmController {
     }
 
     @PatchMapping(value = "/sakila/film_text/update")
-    public ResponseEntity<?> updateFilmText(@RequestBody FilmText film){
-        Optional<FilmText> filmExist  = filmTextRepository.findById(film.getId());
-        if (filmExist.isEmpty()){
+    public ResponseEntity<?> updateFilmText(@RequestBody FilmText film) {
+        Optional<FilmText> filmExist = filmTextRepository.findById(film.getId());
+        if (filmExist.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
         }
         filmExist.get().setDescription(film.getDescription());
@@ -151,13 +149,12 @@ public class FilmController {
 
 
     @DeleteMapping(value = "/sakila/film_text/delete/{id}")
-    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id){
+    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id) {
         Optional<FilmText> filmText = filmTextRepository.findById(id);
-        if ( filmText.isPresent()){
+        if (filmText.isPresent()) {
             filmTextRepository.delete(filmTextRepository.getById(id));
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 

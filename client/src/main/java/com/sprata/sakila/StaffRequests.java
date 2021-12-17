@@ -3,7 +3,7 @@ package com.sprata.sakila;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sprata.sakila.entity.Staff;
+import com.sparta.sakila.entity.Staff;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
