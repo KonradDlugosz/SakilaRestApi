@@ -1,22 +1,17 @@
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.sakila.entity.Film;
-import com.sparta.sakila.entity.Staff;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Path;
+import java.util.ArrayList;
 
-import static com.sprata.sakila.FilmRequests.*;
+import static com.sparta.sakila.FilmRequests.*;
 
 public class FilmTest {
 
@@ -31,6 +26,7 @@ public class FilmTest {
         postfilm = postNewFilm();
         putFilm = putNewFilm();
     }
+
 
     @Test
     @DisplayName("Given id 5, return id")
@@ -134,7 +130,7 @@ public class FilmTest {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        Assertions.assertEquals(201, response.statusCode());
+        Assertions.assertEquals(200, response.statusCode());
     }
 
     @Test
@@ -142,7 +138,7 @@ public class FilmTest {
     public void deleteFilmTest() {
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create("http://localhost:8080/sakila/films/delete/998"))
+                .uri(URI.create("http://localhost:8080/sakila/films/delete/3"))
                 .DELETE()
                 .build();
         HttpClient client = HttpClient.newHttpClient();
@@ -190,7 +186,6 @@ public class FilmTest {
         }
         Assertions.assertEquals(200, response.statusCode());
     }
-
 
 
 }

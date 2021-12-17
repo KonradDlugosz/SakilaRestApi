@@ -1,4 +1,4 @@
-package com.sprata.sakila;
+package com.sparta.sakila;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +15,6 @@ import java.nio.file.Path;
 
 public class FilmRequests {
 
-    public static void main(String[] args) {
-        System.out.println(getOneFilmJasonBody());
-    }
 
     public static HttpResponse<String> getOneFilmConnection() {
         String getOneFilmUrl = "http://localhost:8080/sakila/films/5";
@@ -43,7 +40,6 @@ public class FilmRequests {
         }
         return film;
     }
-
 
 
     private static HttpResponse<String> getResponse(HttpRequest request) {
