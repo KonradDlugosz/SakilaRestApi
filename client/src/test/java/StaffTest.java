@@ -1,18 +1,14 @@
-import com.sprata.sakila.entity.Staff;
+import com.sparta.sakila.entity.Staff;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 
 import org.junit.jupiter.api.Test;
 import java.util.Map;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
-
-import static com.sprata.sakila.StaffRequests.*;
-import static com.sprata.sakila.util.Constants.LOGGER;
+import static com.sparta.sakila.StaffRequests.*;
+import static com.sparta.sakila.entity.util.Constants.LOGGER;
 
 public class StaffTest {
 

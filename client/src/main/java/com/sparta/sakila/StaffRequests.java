@@ -1,9 +1,9 @@
-package com.sprata.sakila;
+package com.sparta.sakila;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sprata.sakila.entity.Staff;
+import com.sparta.sakila.entity.Staff;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static com.sprata.sakila.util.Constants.LOGGER;
+import static com.sparta.sakila.entity.util.Constants.LOGGER;
 
 public class StaffRequests {
 

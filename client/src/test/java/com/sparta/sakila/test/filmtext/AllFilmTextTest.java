@@ -3,7 +3,7 @@ package com.sparta.sakila.test.filmtext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sprata.sakila.entity.FilmText;
+import com.sparta.sakila.entity.FilmText;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
