@@ -1,0 +1,15 @@
+{
+  "id":3,
+  "firstName": "Alan",
+  "lastName": "Edwards",
+  "address": {
+    "id": 1
+  },
+  "picture": null,
+  "email": "Alan@sakilastaff.com",
+  "store": 1,
+  "active": false,
+  "username": "Alan",
+  "password": "AlanEd201",
+  "lastUpdate": "2021-02-15T03:57:16Z"
+}

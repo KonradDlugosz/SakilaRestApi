@@ -1,0 +1,14 @@
+{
+  "firstName": "Konrad",
+  "lastName": "Dlugosz",
+  "address": {
+    "id": 4
+  },
+  "picture": null,
+  "email": "konrad@sakilastaff.com",
+  "store": 1,
+  "active": true,
+  "username": "konrad",
+  "password": "konrad1234",
+  "lastUpdate": "2021-02-15T03:57:16Z"
+}
