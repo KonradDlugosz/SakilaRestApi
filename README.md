@@ -153,8 +153,8 @@ Jackson is a high-performance JSON processor for Java. It allows the creation of
 ## Authors
 
 * [Konrad Dlugosz](https://github.com/KonradDlugosz)
-* [Mark Burnett](https://github.com/djfrigid)
-* [Nikolaos Papadopoulos](https://github.com/djfrigid)
+* [Mark Burnitt](https://github.com/djfrigid)
+* [Nikolaos Papadopoulos](https://github.com/Moodhunter34)
 * [Pruthvi Lalij](https://github.com/pruthvi-lalji)
 * [Ria Janani](https://github.com/Ria622)
-* [Ed Bencito](https://github.com/Moodhunter34) 
+* [Ed Bencito](https://github.com/EdBencito) 
