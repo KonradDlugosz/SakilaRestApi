@@ -33,15 +33,15 @@
 
 ## About The Project
 
-The main objective of this project is to deploy REST API for Sakila Database that provides CRUD operations on the database. This is achieved by using variety of HTTP requests. The project is split into two sub projects in order to run API and be able to tests it. Here is the division of the project: 
+The main objective of this project is to deploy REST API for Sakila Database that provides CRUD operations on the database. This is achieved by using HTTP requests with a variety of different HTTP verbs. The project is split into two sub-projects in order to run the API and be able to test it. Here is the division of the project: 
 
 ### Server
 
-Server hosts the developed REST API which includes all the CRUD operations and awaits HTTP requests from client in order to get data or alter database and send back response over http protocol to client which can be inspected for correct behavior.   
+Server hosts the developed REST API which includes all the CRUD operations and awaits HTTP requests from the client in order to get data or alter the database and send back a response over HTTP to the client which can be inspected for correct behavior.   
 
 ### Client
 
-The purpose of client in this project is to send a http request to the server and receive JSON response which than is dieselized into java object, this is done using Jackson. Afterwards, these objects are used in Junit testing to check that the server response is as expected. Another way of testing the server can be done by browser, however it only supports GET request. Alternatively, Postman supports all types of HTTP requests however this requires manually test for each requests whereas the client tests all requests automatically. 
+The purpose of the client in this project is to send a HTTP request to the server and receive a JSON response which than is deserialized into a Java object using Jackson. Afterwards, these objects are used in JUnit testing to check that the server response is as expected. Another way of testing the server can be a web browser, however it only supports GET requests. Alternatively, Postman supports all types of HTTP requests, however this requires manual testing for each request whereas the client tests all requests automatically. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -59,13 +59,15 @@ You will also need MySQL installed and Sakila database: https://dev.mysql.com/do
    git clone https://github.com/KonradDlugosz/SakilaRestApi
    ```
 
-2. Once you clone the project you will need to include `application.properties` file to connect to the database. Example of MySQL connection file:
+2. Once you clone the project you will need to include `application.properties` file to connect to the database. This should be located under ```src/main/resources```. Example of MySQL connection file:
 
    ```
    spring.datasource.url=jdbc:mysql://localhost:3306/sakila
    spring.datasource.username=root
    spring.datasource.password=root
    ```
+   Other databases can be used by replacing the MySQL part of the URL with the database technology that you prefer, though you will need the corresponding driver regardless of which database that you use.
+
 
 3. Open command prompt (Windows) or terminal (Mac/Linux) and navigate to cloned repository. 
 
@@ -87,7 +89,7 @@ You will also need MySQL installed and Sakila database: https://dev.mysql.com/do
 
 ## HTTP Requests
 
-HTTP defines a set of **request methods** to indicate the desired action to performed in Sakila database. 
+HTTP defines a set of **request methods** to indicate the desired action to performed in database. 
 
 ### GET Requests
 
@@ -113,6 +115,10 @@ An example endpoint for performing a ```PATCH``` request would be ```/actor/upda
 
 Endpoints will return a ```200``` if the request was good, with a message to indicate the success or failure, except for the Store endpoint, which will return ```202``` for a successful request, ```400``` if the request provided invalid JSON but for an existing store, and ```404``` for stores that do not exist. 
 
+### PUT Requests 
+
+HTTP ```PUT``` requests are supported by all tables except the Store table, which should use only ```PATCH``` requests. Endpoints and status codes for the ```PUT``` requests are the same as those for the corresponding ```PATCH``` requests, so further details are omitted from this section to prevent redundancy. 
+
 ### DELETE Requests
 
 HTTP ```DELETE``` Requests are supported for all tables included as part of the API. Endpoints follow the pattern of ```table_name/delete/id```, where the supplied ID is the ID that uniquely identifies the record in the DB.
@@ -132,14 +138,14 @@ This section contains all the tools and frameworks that were used in this projec
 
 ### Spring Boot
 
-Spring boot was used to develop RESTful web service as it makes it easy to build API. It provides auto configurated production-grade spring application. This allows to get stared quickly without wasting time on configurating Spring application. 
+Spring boot was used to develop RESTful web service as it makes it easy to build API. It provides an automatically configured production-grade spring application. This allows to get started quickly without wasting time on configuring a traditional Spring application. 
 
 ### Hibernate
 
-Hibernate is object-relational mapping tool for java which provides framework for mapping object-oriented model to relational database which in our case is Sakila database. 
+Hibernate is Object-Relational Mapping (ORM) tool for Java which provides a framework for mapping the object-oriented model of application to a database system. This project uses the Sakila sample database, which runs on MySQL, though as long as the schema is the same, it should work with any database backend. 
 
 ### Jackson 
 
-Jackson is a high-performance JSON processor for Java. It allowed to create JSON parsing and also to deserialize JSON into java object by the use of Object mapper which are used in Junit testing.   
+Jackson is a high-performance JSON processor for Java. It allows the creation of JSON from Java objects and also to deserialize JSON into a Java object by the use of the ```ObjectMapper``` which are used in the JUnit tests.   
 
 <p align="right">(<a href="#top">back to top</a>)</p>
