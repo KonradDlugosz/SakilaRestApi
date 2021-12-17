@@ -60,26 +60,23 @@ public class StoreTest{
                 .uri(URI.create("http://localhost:8080/sakila/store/create"))
                 .POST(HttpRequest.BodyPublishers.ofString("""
                         {
-                               "id": 6,
-                               "managerStaff": {
-                                   "id": 35,
-                                   "firstName": "UT",
-                                   "lastName": "UT",
-                                   "address": {
-                                       "id": 17
-                                   },
-                                   "picture": null,
-                                   "email": "Jon.Stephens@sakilastaff.com",
-                                   "store": 2,
-                                   "active": true,
-                                   "username": "Jon",
-                                   "password": null,
-                                   "lastUpdate": "2006-02-15T03:57:16Z"
-                               },
+                               "id": 1,
+                                "managerStaff": {
+                                "firstName": "Unit",
+                                "lastName": "Test",
+                                "address": {
+                                    "id": 123
+                                },
+                                "picture": null,
+                                "email": "unit@test.com",
+                                "store": 2,
+                                "active": true,
+                                "username": "JUnit",
+                                "password": null
+                                },
                                "address": {
-                                   "id": 2
-                               },
-                               "lastUpdate": "2006-02-15T04:57:12Z"
+                                   "id": 4
+                               }
                            }""".indent(1)))
                 .header("content-type", "application/json")
                 .build();
@@ -98,7 +95,7 @@ public class StoreTest{
     public void deleteStore(){
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create("http://localhost:8080/sakila/store/deletebyid/24"))
+                .uri(URI.create("http://localhost:8080/sakila/store/deletebyid/23"))
                 .DELETE()
                 .build();
         HttpClient client = HttpClient.newHttpClient();

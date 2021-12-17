@@ -76,9 +76,24 @@ public class StoreController {
     }
 
     @PostMapping(value = "/sakila/store/create")
-    public ResponseEntity<String> createNewStore(@RequestBody Store newStore){
-        storeRepository.save(newStore);
-        return new ResponseEntity<>("Store was added sucessfully", HttpStatus.CREATED);
+    public ResponseEntity<String> createNewStore(@RequestBody String newStoreString){
+        ObjectMapper mapper = new ObjectMapper();
+        Store newStore = null;
+        try {
+            newStore = mapper.readValue(newStoreString, Store.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if(newStore != null){
+            Staff newStaff = newStore.getManagerStaff();
+            newStaff.setLastUpdate(Instant.now());
+            newStore.setLastUpdate(Instant.now());
+            staffRepository.save(newStaff);
+            storeRepository.save(newStore);
+            return new ResponseEntity<>("Store was added sucessfully", HttpStatus.CREATED);
+        }else{
+         return new ResponseEntity<>("Given JSON Could not be parsed into a new Store", HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     @GetMapping(value = "/sakila/store/getstoreandstaff/{id_of_store}")
