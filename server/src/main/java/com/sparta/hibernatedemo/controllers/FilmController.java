@@ -125,9 +125,11 @@ public class FilmController {
 
     @PostMapping(value = "/sakila/film_text/add")
     public ResponseEntity<?> addFilm(@RequestBody FilmText filmText){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
         Optional<FilmText> filmExist = filmTextRepository.findById(filmText.getId());
         if (filmExist.isPresent()){
-            return ResponseEntity.status(HttpStatus.IM_USED).body("Already Exist \n");
+            return new ResponseEntity("{\"message\":\"Film Already Exist\"}",headers,HttpStatus.OK);
         }
         FilmText fT = new FilmText();
         fT.setId(filmText.getId());
@@ -151,16 +153,26 @@ public class FilmController {
 
 
     @DeleteMapping(value = "/sakila/film_text/delete/{id}")
-    public ResponseEntity<FilmText> deleteFilmText(@PathVariable Integer id){
+    public ResponseEntity<?> deleteFilmText(@PathVariable Integer id){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
         Optional<FilmText> filmText = filmTextRepository.findById(id);
         if ( filmText.isPresent()){
             filmTextRepository.delete(filmTextRepository.getById(id));
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+            String message = "{\"message\":\"Film Deleted\",\"Film\":[";
+            String values = "{\"id\":\""
+                    +filmText.get().getId()+
+                    "\",\"title\":\""
+                    +filmText.get().getTitle()+
+                    "\",\"description\":\""
+                    +filmText.get().getDescription()+
+                    "\"}";
+            String bodyMessage = message + values + "]}";
+            return new ResponseEntity<String>(bodyMessage,headers,HttpStatus.OK);
         }
         else{
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return new ResponseEntity<String>("{\"message\":\"No film exist with id " +id + "\"}", headers, HttpStatus.OK);
         }
-
     }
 }
 
