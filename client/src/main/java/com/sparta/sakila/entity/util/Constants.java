@@ -1,4 +1,4 @@
-package com.sprata.sakila.util;
+package com.sparta.sakila.entity.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
