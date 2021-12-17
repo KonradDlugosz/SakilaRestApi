@@ -36,7 +36,7 @@ public class StoreController {
             Map<String, Object> responseJSON = new HashMap<>();
             responseJSON.put("lastUpdate", store.getLastUpdate());
             responseJSON.put("address", store.getAddress());
-            responseJSON.put("managerInfo", Map.of("firstName", store.getManagerStaff().getFirstName(), "lastName", store.getManagerStaff().getLastName()));
+            responseJSON.put("managerStaff", Map.of("firstName", store.getManagerStaff().getFirstName(), "lastName", store.getManagerStaff().getLastName()));
             responseJSON.put("id", store.getId());
             return new ResponseEntity<>(responseJSON, HttpStatus.OK);
         }
@@ -86,7 +86,7 @@ public class StoreController {
         if (storeRepository.existsById(id_of_store)) {
             Store store = storeRepository.getById(id_of_store);
             List<Staff> allStaff = staffRepository.findByStore_id(id_of_store);
-            List<?> responseBody = List.of(store, allStaff);
+            Map<String, Object> responseBody = new HashMap<>(Map.of("store", store, "staff", allStaff));
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
         else return new ResponseEntity<>("Store with ID: " + id_of_store + " was not found", HttpStatus.NOT_FOUND);

@@ -1,7 +1,10 @@
 package com.sparta.sakila.tests;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.sakila.entity.Store;
+import com.sparta.sakila.entity.util.StoreAndStaff;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StoreTest{
 
@@ -48,6 +52,7 @@ public class StoreTest{
         assertEquals("2021-12-15T12:32:12Z", theStore.getLastUpdate());
     }
 
+    @Disabled
     @Test
     public void testCreateNewStore(){
         HttpRequest request = HttpRequest
@@ -55,17 +60,17 @@ public class StoreTest{
                 .uri(URI.create("http://localhost:8080/sakila/store/create"))
                 .POST(HttpRequest.BodyPublishers.ofString("""
                         {
-                               "id": 3,
+                               "id": 6,
                                "managerStaff": {
-                                   "id": 34,
-                                   "firstName": "Jon",
-                                   "lastName": "Stephens",
+                                   "id": 35,
+                                   "firstName": "UT",
+                                   "lastName": "UT",
                                    "address": {
-                                       "id": 4
+                                       "id": 17
                                    },
                                    "picture": null,
                                    "email": "Jon.Stephens@sakilastaff.com",
-                                   "store": 3,
+                                   "store": 2,
                                    "active": true,
                                    "username": "Jon",
                                    "password": null,
@@ -88,11 +93,12 @@ public class StoreTest{
         assertEquals(201, response.statusCode());
     }
 
+    @Disabled
     @Test
     public void deleteStore(){
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create("http://localhost:8080/sakila/store/deletebyid/6"))
+                .uri(URI.create("http://localhost:8080/sakila/store/deletebyid/24"))
                 .DELETE()
                 .build();
         HttpClient client = HttpClient.newHttpClient();
@@ -110,16 +116,15 @@ public class StoreTest{
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create("http://localhost:8080/sakila/store/update"))
-                .PUT(HttpRequest.BodyPublishers.ofString("""
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("""
                         {
-                               "id": 6,
+                               "id": 23,
                                "managerStaff": {
                                    "id": 3
                                },
                                "address": {
                                    "id": 12
-                               },
-                               "lastUpdate": "2006-02-15T04:57:12Z"
+                               }
                            }""".indent(1)))
                 .header("content-type", "application/json")
                 .build();
@@ -133,4 +138,26 @@ public class StoreTest{
         assertEquals(202, response.statusCode());
     }
 
+    @Test
+    public void testGetStoreAndAllStaff(){
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create("http://localhost:8080/sakila/store/getstoreandstaff/1"))
+                .build();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        ObjectMapper mapper =new ObjectMapper();
+        try {
+            StoreAndStaff sns = mapper.readValue(response.body(), StoreAndStaff.class);
+            assertEquals(1, sns.getStore().getId());
+            assertTrue(sns.getAllStaff().size() > 1);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 }
