@@ -97,8 +97,16 @@ public class FilmController {
         return new ResponseEntity<String>("{\"message\":\"Film does not exist\"}", headers, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/sakila/films/add")
+    public ResponseEntity<?> addNewFilm(@RequestBody Film newFilm){
+        filmRepository.save(newFilm);
+        return new ResponseEntity<>("Film was added successfully", HttpStatus.CREATED);
+    }
 
-
+    @GetMapping(value = "sakila/film_text")
+    public ResponseEntity<?> getAllFilm(){
+        return ResponseEntity.of(Optional.of(filmTextRepository.findAll()));
+    }
 
 
     @GetMapping(value = "sakila/film_text/{filmId}")
@@ -111,6 +119,8 @@ public class FilmController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+
 
 
     @PostMapping(value = "/sakila/film_text/add")
