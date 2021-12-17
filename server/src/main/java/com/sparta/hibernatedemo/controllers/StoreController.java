@@ -1,5 +1,7 @@
 package com.sparta.hibernatedemo.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.hibernatedemo.entities.Staff;
 import com.sparta.hibernatedemo.entities.Store;
 import com.sparta.hibernatedemo.repositories.StaffRepository;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,45 +36,72 @@ public class StoreController {
             Map<String, Object> responseJSON = new HashMap<>();
             responseJSON.put("lastUpdate", store.getLastUpdate());
             responseJSON.put("address", store.getAddress());
-            responseJSON.put("managerInfo", Map.of("firstName", store.getManagerStaff().getFirstName(), "lastName", store.getManagerStaff().getLastName()));
+            responseJSON.put("managerStaff", Map.of("firstName", store.getManagerStaff().getFirstName(), "lastName", store.getManagerStaff().getLastName()));
             responseJSON.put("id", store.getId());
             return new ResponseEntity<>(responseJSON, HttpStatus.OK);
         }
         else return new ResponseEntity<>("Store with ID: " + id + " was not found", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping(value = "sakila/store/update")
-    public ResponseEntity<?> updateStore(@RequestBody Store newState){
-        if (storeRepository.existsById(newState.getId())){
-            storeRepository.save(newState);
-            return new ResponseEntity<>(newState, HttpStatus.ACCEPTED);
+    @PatchMapping(value = "sakila/store/update")
+    public ResponseEntity<?> updateStore(@RequestBody String newStateString){
+        ObjectMapper mapper = new ObjectMapper();
+        Store newStore = null;
+        try {
+            newStore = mapper.readValue(newStateString, Store.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
-        else return new ResponseEntity<>(newState, HttpStatus.CREATED);
+        if (newStore!= null) {
+            if (storeRepository.existsById(newStore.getId())) {
+                newStore.setLastUpdate(Instant.now());
+                newStore.setManagerStaff(storeRepository.getById(newStore.getId()).getManagerStaff());
+                storeRepository.save(newStore);
+                return new ResponseEntity<>(newStore, HttpStatus.ACCEPTED);
+            } else return new ResponseEntity<>("Store with ID: " + newStore.getId() + " not found!", HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>("Unable to construct valid entity from provided data", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping(value = "sakila/store/deletebyid/{id_to_delete}")
     public ResponseEntity<String> deleteStore(@PathVariable int id_to_delete){
         if (storeRepository.existsById(id_to_delete)){
-            Store store = storeRepository.getById(id_to_delete);
+            List<Staff> staffFromStore = staffRepository.findByStore_id(id_to_delete);
+            for (Staff member: staffFromStore){
+                member.setStore(storeRepository.getById(20));
+            }
+            staffRepository.saveAll(staffFromStore);
             storeRepository.deleteById(id_to_delete);
-            List<Staff> allStaff = staffRepository.store_id(store.getId());
-            staffRepository.deleteAllInBatch(allStaff);
             return new ResponseEntity<>("Delete Successful", HttpStatus.OK);
         } else return new ResponseEntity<>("Store specified not found", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/sakila/store/create")
-    public ResponseEntity<?> createNewStore(@RequestBody Store newStore){
-        storeRepository.save(newStore);
-        return new ResponseEntity<>("Store was added sucessfully", HttpStatus.CREATED);
+    public ResponseEntity<String> createNewStore(@RequestBody String newStoreString){
+        ObjectMapper mapper = new ObjectMapper();
+        Store newStore = null;
+        try {
+            newStore = mapper.readValue(newStoreString, Store.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if(newStore != null){
+            Staff newStaff = newStore.getManagerStaff();
+            newStaff.setLastUpdate(Instant.now());
+            newStore.setLastUpdate(Instant.now());
+            staffRepository.save(newStaff);
+            storeRepository.save(newStore);
+            return new ResponseEntity<>("Store was added sucessfully", HttpStatus.CREATED);
+        }else{
+         return new ResponseEntity<>("Given JSON Could not be parsed into a new Store", HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     @GetMapping(value = "/sakila/store/getstoreandstaff/{id_of_store}")
     public ResponseEntity<?> getStoreAndStaff(@PathVariable int id_of_store){
         if (storeRepository.existsById(id_of_store)) {
             Store store = storeRepository.getById(id_of_store);
-            List<Staff> allStaff = staffRepository.store_id(id_of_store);
-            List<?> responseBody = List.of(store, allStaff);
+            List<Staff> allStaff = staffRepository.findByStore_id(id_of_store);
+            Map<String, Object> responseBody = new HashMap<>(Map.of("store", store, "staff", allStaff));
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
         else return new ResponseEntity<>("Store with ID: " + id_of_store + " was not found", HttpStatus.NOT_FOUND);

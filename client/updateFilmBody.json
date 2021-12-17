@@ -1,0 +1,17 @@
+{
+  "id": 3,
+  "title": "CATCH ME IF YOU CAN",
+  "description": "An epic drama with Leonardo Di Caprio",
+  "releaseYear": 2006,
+  "language": {
+    "id": 1
+  },
+  "originalLanguage": null,
+  "rentalDuration": 3,
+  "rentalRate": 0.99,
+  "length": 115,
+  "replacementCost": 22.99,
+  "rating": "PG",
+  "specialFeatures": "Deleted Scenes,Behind the Scenes",
+  "lastUpdate": "2006-02-15T05:03:42Z"
+}

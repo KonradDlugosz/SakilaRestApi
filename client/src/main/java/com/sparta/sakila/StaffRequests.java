@@ -19,10 +19,6 @@ import static com.sparta.sakila.entity.util.Constants.LOGGER;
 
 public class StaffRequests {
 
-    public static void main(String[] args) {
-        System.out.println(deleteStaff());
-    }
-
     /**
      * Base methods to get HttpResponse and deserialize JSON to Java Objects POJO
      * @param request -> Http request with headers, method like GET/POST/DELETE etc.
