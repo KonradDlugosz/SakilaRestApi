@@ -1,7 +1,11 @@
 package com.sparta.hibernatedemo.controllers;
 
 import com.sparta.hibernatedemo.entities.Actor;
+import com.sparta.hibernatedemo.entities.FilmActor;
 import com.sparta.hibernatedemo.repositories.ActorRepository;
+import com.sparta.hibernatedemo.repositories.FilmActorRepository;
+import com.sparta.hibernatedemo.repositories.FilmRepository;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,10 @@ public class ActorController {
 
     @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private FilmActorRepository filmActorRepository;
+    @Autowired
+    private FilmRepository filmRepository;
 
     @GetMapping(value = "/sakila/actors")
     public List<Actor> getActors(){
@@ -73,5 +81,38 @@ public class ActorController {
             return ResponseEntity.ok(updatedActor);
         } else
             return null;
+    }
+
+    //    Pulls FilmActor Composite key in JSON
+    @GetMapping(value = "/sakila/ckey")
+    public List<FilmActor> getCkey() {
+        return filmActorRepository.findAll();
+
+    }
+
+
+    //    GetFilmsbyActorID
+    @GetMapping(value = "/sakila/actors/byFilmId/{id}")
+    public JSONObject getActorsbyFilmId(@PathVariable Integer id) {
+        List<FilmActor> actorsbyfilmId = filmActorRepository.findAll().stream()
+                .filter(s -> s.getId().getFilmId() == id).toList();
+
+        JSONObject film = new JSONObject();
+        JSONObject actors = new JSONObject();
+
+        film.put("Film id", actorsbyfilmId.get(0).getId().getFilmId());
+        film.put("Film Name", filmRepository.getById(actorsbyfilmId.get(0).getId().getFilmId()).getTitle()); // outputs Actor Name.
+
+        for (int i = 0; i < actorsbyfilmId.size(); i++) {
+            actors.put("Actor id " + actorsbyfilmId.get(i).getId().getActorId() + " Actor Name ",
+                    actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getFirstName() + " " +
+                            actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getLastName()); // outputs Film ID and Name but put properly.
+
+//            actors.put("Actor id" + "#" + i, actorsbyfilmId.get(i).getId().getActorId()); //
+//            actors.put("Actor Name", actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getFirstName()
+//                    + " " + actorRepository.getById(actorsbyfilmId.get(i).getId().getActorId()).getLastName());
+        }
+        film.put("Actors", actors);
+        return film;
     }
 }
