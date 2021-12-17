@@ -1,6 +1,7 @@
 package com.sparta.hibernatedemo.controllers;
 
 import com.sparta.hibernatedemo.entities.Actor;
+import com.sparta.hibernatedemo.entities.FilmActor;
 import com.sparta.hibernatedemo.repositories.ActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,4 +75,12 @@ public class ActorController {
         } else
             return null;
     }
+
+    /*
+    @GetMapping(value ="/sakila/films/from/actors")
+    public List<FilmActor> findFilmsByActorId(@PathVariable Integer id){
+
+    }
+
+     */
 }
