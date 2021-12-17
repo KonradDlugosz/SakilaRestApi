@@ -204,7 +204,7 @@ public class StaffTest {
      */
 
     @Test
-    @DisplayName("4.1 Given delete request, Return successfully response")
+    @DisplayName("4.1 Given DELETE request, Return successfully response")
     public void deleteStaffB(){
         if(isDeleted.containsValue(false)){
             LOGGER.warn("Record doesn't exists, can't delete : TEST CASE 4.1");

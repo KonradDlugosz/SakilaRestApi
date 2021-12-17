@@ -72,12 +72,17 @@ public class StaffRequests {
 
     public static Staff postNewStaff(){
         String postUrl = "http://localhost:8080/sakila/staff/create";
-        HttpRequest request= HttpRequest.newBuilder().uri(URI.create(postUrl))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString("{\"firstName\": \"Konrad\", \"lastName\": \"Dlugosz\",\"address\": { \"id\": 4 }, " +
-                        "\"picture\": null, \"email\":\"konrad@sakilastaff.com\", \"store\": 1, \"active\": true,\"username\": " +
-                        "\"konrad\",\"password\": \"konrad1234\", \"lastUpdate\": \"2021-02-15T03:57:16Z\"}"))
-                .build();
+        HttpRequest request= null;
+        try {
+            request = HttpRequest.newBuilder().uri(URI.create(postUrl))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofFile(Path.of("addNewStaffBody.json")))
+                    .build();
+            LOGGER.info("POST request successful");
+        } catch (FileNotFoundException e) {
+            LOGGER.warn("POST request unsuccessful!");
+            e.printStackTrace();
+        }
         String json = getResponse(request).body();
         return getObjectMapper(json);
     }
@@ -95,7 +100,7 @@ public class StaffRequests {
                     .header("Content-Type", "application/json")
                     .PUT(HttpRequest.BodyPublishers.ofFile(Path.of("updateStaffBody.json")))
                     .build();
-            LOGGER.info("PUT request successful!");
+            LOGGER.info("PUT request successful");
         } catch (FileNotFoundException e) {
             LOGGER.warn("PUT request unsuccessful!");
             e.printStackTrace();
