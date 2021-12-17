@@ -85,5 +85,22 @@ public class ActorController {
     @GetMapping(value = "/sakila/ckey")
     public List<FilmActor> getCkey(){
         return filmActorRepository.findAll();
+
     }
+
+    @GetMapping(value = "/sakila/test/0")
+    public List<FilmActor> test(){
+        List<FilmActor> filmsbyActorId = filmActorRepository.findAll().stream().filter(s -> s.getId().getActorId() == 1).toList();
+        return filmsbyActorId;
+    }
+
+    //    GetActorsbyFilmID
+    @GetMapping(value = "/sakila/actors/byFilmId")
+    public List<FilmActor> getFilmbyActorId(@RequestParam Integer id) {
+        List<FilmActor>  filmsbyActorId = filmActorRepository.findAll().stream().filter(s -> s.getId().getFilmId() == id).toList();
+        return filmsbyActorId;
+    }
+
+
+
 }
