@@ -103,6 +103,11 @@ public class FilmController {
         return new ResponseEntity<>("Film was added successfully", HttpStatus.CREATED);
     }
 
+    @GetMapping(value = "sakila/film_text")
+    public ResponseEntity<?> getAllFilm(){
+        return ResponseEntity.of(Optional.of(filmTextRepository.findAll()));
+    }
+
 
     @GetMapping(value = "sakila/film_text/{filmId}")
     public ResponseEntity<?> filmDescription(@PathVariable Integer filmId) {
@@ -114,6 +119,8 @@ public class FilmController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+
 
 
     @PostMapping(value = "/sakila/film_text/add")
