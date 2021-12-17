@@ -20,10 +20,10 @@ public class PatchFilmTextTest {
         static String fTitle ="Sparta Global";
         static String fDescription = "Where undergraduates comes for upskilling!";
         static FilmTextAdd filmTextAdd = null;
-
+        static FilmText filmAdd = new FilmText();
         // @DisplayName("Gets all the film details from the film Text")
         public static HttpResponse getFilmText(){
-            FilmText filmAdd = new FilmText();
+
             filmAdd.setId(fId);
             filmAdd.setTitle(fTitle);
             filmAdd.setDescription(fDescription);
@@ -41,9 +41,9 @@ public class PatchFilmTextTest {
 
             filmAdd.setDescription("This is updated Description");
             s = filmAdd.toJson();
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/sakila/film_text/update/1001"))
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/sakila/film_text/update"))
                     .headers("content-type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(s))
+                    .method("PATCH",HttpRequest.BodyPublishers.ofString(s))
                     .build();
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> resq = null;
@@ -79,30 +79,24 @@ public class PatchFilmTextTest {
         }
 
 
-
-        @DisplayName("Given that film has been inserted, return data id should match the inserted data")
+        @DisplayName("Given that film has been one had been updated, return data id should match the inserted data")
         @Test
         public void getFilmTextID(){
-            Assertions.assertEquals(1001, filmTextAdd.getFilm().getId());
+            Assertions.assertEquals(filmAdd.getId(), filmTextAdd.getFilm().getId());
         }
 
-        @DisplayName("Given that film has been inserted, return film title should match the title of the inserted film")
+        @DisplayName("Given that film has been updated , return film title should match the title of the of updated film")
         @Test
         public void getFilmTextTitleTest(){
-            Assertions.assertEquals(fTitle,filmTextAdd.getFilm().getTitle());
+            Assertions.assertEquals(filmAdd.getTitle(),filmTextAdd.getFilm().getTitle());
         }
 
-        @DisplayName("Given that film has been inserted, return film description should match the description of the inserted film")
+        @DisplayName("Given that film has been updated, return film description should match the new description of the film")
         @Test
         public void getFilmTextDescriptionTest(){
-            Assertions.assertEquals(fDescription,filmTextAdd.getFilm().getDescription());
+            Assertions.assertEquals(filmAdd.getDescription(),filmTextAdd.getFilm().getDescription());
         }
 
-        @DisplayName("Given that film already exist, return should display message of it being existing already")
-        @Test
-        public void getFilmTextBeingExistAlready(){
-            Assertions.assertFalse((filmTextAdd.getMessage().equals("No film exist with id " +fId)));
-        }
 
 
 
