@@ -1,0 +1,16 @@
+{
+  "title": "This is a test movie",
+  "description": "This is a test description",
+  "releaseYear": 2006,
+  "language": {
+    "id": 1
+  },
+  "originalLanguage": null,
+  "rentalDuration": 4,
+  "rentalRate": 5.99,
+  "length": 112,
+  "replacementCost": 26.99,
+  "rating": "G",
+  "specialFeatures": "Commentaries,Behind the Scenes",
+  "lastUpdate": "2006-02-15T05:03:42Z"
+}
